@@ -1,7 +1,8 @@
 # Ignore .git folder
 .git*
-
 .gitignore
+
+docs/*
 README.md
 README.md.bu
 Makefile
