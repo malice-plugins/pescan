@@ -64,11 +64,11 @@ See [`CHANGELOG.md`](https://github.com/maliceio/malice-pe/blob/master/CHANGELOG
 
 [See all contributors on GitHub](https://github.com/maliceio/malice-pe/graphs/contributors).
 
-Please update the [CHANGELOG.md](https://github.com/maliceio/malice-pe/blob/master/CHANGELOG
+Please update the [CHANGELOG.md](https://github.com/maliceio/malice-pe/blob/master/CHANGELOG)
 
 ### Credits
 
-Heavily (if not entirely) influenced by https://github.com/viper-framework/viper/blob/master/viper/modules/pe.py
+Heavily (if not entirely) influenced by the [viper pe module](https://github.com/viper-framework/viper/blob/master/viper/modules/pe.py)
 
 ### License
 
