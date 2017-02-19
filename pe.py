@@ -19,13 +19,13 @@ except ImportError:
     HAVE_PEFILE = False
 
 try:
-    from viper.modules.pehash.pehasher import calculate_pehash
+    from pehash.pehasher import calculate_pehash
     HAVE_PEHASH = True
 except ImportError:
     HAVE_PEHASH = False
 
 try:
-    from viper.modules.verifysigs.verifysigs import get_auth_data
+    from verifysigs.verifysigs import get_auth_data
     from verifysigs.asn1 import dn
     HAVE_VERIFYSIGS= True
 except ImportError:
