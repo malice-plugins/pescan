@@ -21,6 +21,7 @@ RUN apk --update add --no-cache -t .build-deps \
   && pip install --upgrade pip wheel \
   && echo " [*] Install requirements..." \
   && pip install -U -r requirements.txt \
+  && chmod +x pe.py \
   && ln -s /src/github.com/maliceio/malice-pe/pe.py /bin/pescan \
   && apk del --purge .build-deps
 
