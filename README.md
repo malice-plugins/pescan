@@ -19,7 +19,7 @@ This repository contains a **Dockerfile** of **malice/pe** for [Docker](https://
 ### Usage
 
 ```
-docker run --rm malice/pe FILE
+docker run --rm malice/pe PEFILE
 ```
 
 ```bash
@@ -68,7 +68,7 @@ Please update the [CHANGELOG.md](https://github.com/maliceio/malice-pe/blob/mast
 
 ### Credits
 
-Heavily (if not entirely) influenced by the [viper pe module](https://github.com/viper-framework/viper/blob/master/viper/modules/pe.py)
+Heavily (if not entirely) influenced by the [viper PE module](https://github.com/viper-framework/viper/blob/master/viper/modules/pe.py)
 
 ### License
 
