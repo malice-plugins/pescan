@@ -1,22 +1,30 @@
-FROM gliderlabs/alpine:3.3
+FROM malice/alpine
 
-MAINTAINER blacktop, https://github.com/blacktop
+LABEL maintainer "https://github.com/blacktop"
 
-COPY . /go/src/github.com/maliceio/malice-pe
-RUN apk-install python
-RUN apk-install -t build-deps go git mercurial python-dev \
-  && set -x \
-  && echo "Building info Go binary..." \
-  && cd /go/src/github.com/maliceio/malice-pe \
-  && export GOPATH=/go \
-  && go version \
-  && go get \
-  && go build -ldflags "-X main.Version=$(cat VERSION) -X main.BuildTime=$(date -u +%Y%m%d)" -o /bin/scan \
-  && rm -rf /go \
-  && apk del --purge build-deps
+COPY . /src/github.com/maliceio/malice-pe
+RUN apk --update add --no-cache python
+RUN apk --update add --no-cache -t .build-deps \
+                                   openssl-dev \
+                                   build-base \
+                                   python-dev \
+                                   libffi-dev \
+                                   musl-dev \
+                                   libc-dev \
+                                   py-pip \
+                                   gcc \
+                                   git \
+  && echo "===> Install pe scanner..." \
+  && cd /src/github.com/maliceio/malice-pe \
+  && export PIP_NO_CACHE_DIR=off \
+  && export PIP_DISABLE_PIP_VERSION_CHECK=on \
+  && pip install --upgrade pip wheel \
+  && echo " [*] Install requirements..." \
+  && pip install -U -r requirements.txt \
+  && ls -s ./pe.py /bin/pescan \
+  && apk del --purge .build-deps
 
 WORKDIR /malware
 
-ENTRYPOINT ["/bin/scan"]
-
+ENTRYPOINT ["su-exec","malice","/sbin/tini","--","pescan"]
 CMD ["--help"]

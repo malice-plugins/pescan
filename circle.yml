@@ -1,0 +1,28 @@
+machine:
+  services:
+    - docker
+
+dependencies:
+  cache_directories:
+    - "~/docker"
+  override:
+    - docker info
+    - if [[ -e ~/docker/image.tar ]]; then docker load --input ~/docker/image.tar; fi
+    - docker build -t malice_pe .
+    - mkdir -p ~/docker; docker save malice_pe > ~/docker/image.tar
+
+test:
+  override:
+    - docker images malice_pe
+    - docker run malice_pe -V /bin/cat | jq .
+    - docker run malice_pe -V /bin/cat | jq -r .pe.markdown
+
+deployment:
+  # master:
+  #   branch: master
+  #   commands:
+  #     - eval $(docker run gliderlabs/pagebuilder circleci-cmd)
+  release:
+    branch: release
+    commands:
+      - make release
