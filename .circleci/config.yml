@@ -1,0 +1,54 @@
+version: 2
+jobs:
+  build:
+    working_directory: /app
+    docker:
+      - image: docker:17.10.0-ce
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 17.10.0-ce
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --no-cache curl jq
+      - restore_cache:
+          keys:
+            - v1-{{ .Branch }}
+          paths:
+            - /caches/app.tar
+      - run:
+          name: Load Docker image layer cache
+          command: |
+            set +o pipefail
+            docker load -i /caches/app.tar | true
+      - run:
+          name: Build application Docker image
+          command: |
+            docker version
+            docker build --cache-from=app -t app .
+      - run:
+          name: Get Docker image size
+          command: |
+            mkdir /tmp/artifacts;
+            docker images --format "{{.Size}}" app > /tmp/artifacts/size;
+      - store_artifacts:
+          path: /tmp/artifacts
+      - run:
+          name: Save Docker image layer cache
+          command: |
+            mkdir -p /caches
+            docker save -o /caches/app.tar app
+      - save_cache:
+          key: v1-{{ .Branch }}-{{ epoch }}
+          paths:
+            - /caches/app.tar
+      - run:
+          name: Run tests
+          command: |
+            set -x
+            curl -L -o /tmp/sample https://github.com/maliceio/malice-av/raw/master/samples/befb88b89c2eb401900a68e9f5b78764203f2b48264fcc3f7121bf04a57fd408
+            docker create -v /malware --name malvol alpine:3.6 /bin/true
+            docker cp /tmp/sample malvol:/malware
+            docker run --rm --volumes-from malvol app -V sample | jq .
+            docker run --rm --volumes-from malvol app -t sample

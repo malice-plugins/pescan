@@ -2,8 +2,13 @@
 .git*
 .gitignore
 
-docs/*
+docs*
+.circleci*
+.vscode*
+
 README.md
 README.md.bu
-Makefile
+NOTES.md
 LICENSE
+Makefile
+CHANGELOG.md
