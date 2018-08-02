@@ -3,7 +3,7 @@ ORG=malice
 NAME=exe
 CATEGORY=document
 VERSION=$(shell cat VERSION)
-MALWARE=tests/malware
+MALWARE=test/malware
 EXTRACT=/malware/test/dump
 MALICE_SCANID?=
 
@@ -47,7 +47,7 @@ endif
 malware:
 ifeq (,$(wildcard $(MALWARE)))
 	wget https://github.com/maliceio/malice-av/raw/master/samples/befb88b89c2eb401900a68e9f5b78764203f2b48264fcc3f7121bf04a57fd408 -O $(MALWARE)
-	cd tests; echo "TEST" > not.malware
+	cd test; echo "TEST" > not.malware
 endif
 
 .PHONY: test
