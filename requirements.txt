@@ -12,7 +12,7 @@ pyasn1==0.1.9
 pycparser==2.14
 pycrypto
 
-git://github.com/erocarrera/pefile.git@v2017.11.5#egg=pefile
+git+https://github.com/erocarrera/pefile.git@v2017.11.5#egg=pefile
 git+https://github.com/crackinglandia/pype32.git#egg=pype32
 git+https://github.com/pyca/cryptography.git#egg=cryptography
 
