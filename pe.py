@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-
+# -*- coding: utf-8 -*-
 # This file is part of Viper - https://github.com/viper-framework/viper
 # See the file 'LICENSE' for copying permission.
 
@@ -8,6 +7,7 @@ import re
 import datetime
 import tempfile
 import time
+from io import BytesIO, open
 
 from viper.common.constants import VIPER_ROOT
 
@@ -19,15 +19,15 @@ except ImportError:
     HAVE_PEFILE = False
 
 try:
-    from pehash.pehasher import calculate_pehash
+    from .pehash.pehasher import calculate_pehash
     HAVE_PEHASH = True
 except ImportError:
     HAVE_PEHASH = False
 
 try:
-    from verifysigs.verifysigs import get_auth_data
-    from verifysigs.asn1 import dn
-    HAVE_VERIFYSIGS= True
+    from .sigs_helper.sigs_helper import get_auth_data
+    from .verifysigs.asn1utils import dn
+    HAVE_VERIFYSIGS = True
 except ImportError:
     HAVE_VERIFYSIGS = False
 
@@ -81,13 +81,18 @@ class PE(Module):
         parser_lang = subparsers.add_parser('language', help='Guess PE language')
         parser_lang.add_argument('-s', '--scan', action='store_true', help='Scan the repository')
 
-        subparsers.add_parser('sections', help='List PE Sections')
+        parser_sect = subparsers.add_parser('sections', help='List PE Sections')
+        parser_sect.add_argument('-d', '--dump', metavar='folder', help='Destionation directory to dump all sections in')
+
         parser_peh = subparsers.add_parser('pehash', help='Calculate the PEhash and compare them')
         parser_peh.add_argument('-a', '--all', action='store_true', help='Prints the PEhash of all files in the project')
         parser_peh.add_argument('-c', '--cluster', action='store_true', help='Calculate and cluster all files in the project')
         parser_peh.add_argument('-s', '--scan', action='store_true', help='Scan repository for matching samples')
 
         self.pe = None
+
+        self.result_compile_time = None
+        self.result_sections = None
 
     def __check_session(self):
         if not __sessions__.is_set():
@@ -96,7 +101,7 @@ class PE(Module):
 
         if not self.pe:
             try:
-                self.pe = pefile.PE(__sessions__.current.file.path)
+                self.pe = pefile.PE(data=__sessions__.current.file.data)
             except pefile.PEFormatError as e:
                 self.log('error', "Unable to parse PE file: {0}".format(e))
                 return False
@@ -110,10 +115,18 @@ class PE(Module):
         if hasattr(self.pe, 'DIRECTORY_ENTRY_IMPORT'):
             for entry in self.pe.DIRECTORY_ENTRY_IMPORT:
                 try:
-                    self.log('info', "DLL: {0}".format(entry.dll))
+                    if isinstance(entry.dll, bytes):
+                        dll = entry.dll.decode()
+                    else:
+                        dll = entry.dll
+                    self.log('info', "DLL: {0}".format(dll))
                     for symbol in entry.imports:
-                        self.log('item', "{0}: {1}".format(hex(symbol.address), symbol.name))
-                except:
+                        if isinstance(symbol.name, bytes):
+                            name = symbol.name.decode()
+                        else:
+                            name = symbol.name
+                        self.log('item', "{0}: {1}".format(hex(symbol.address), name))
+                except Exception:
                     continue
 
     def exports(self):
@@ -142,7 +155,7 @@ class PE(Module):
 
                 try:
                     cur_ep = pefile.PE(sample_path).OPTIONAL_HEADER.AddressOfEntryPoint
-                except:
+                except Exception:
                     continue
 
                 rows.append([sample.md5, sample.name, cur_ep])
@@ -163,7 +176,7 @@ class PE(Module):
 
                 try:
                     cur_ep = pefile.PE(sample_path).OPTIONAL_HEADER.AddressOfEntryPoint
-                except:
+                except Exception:
                     continue
 
                 if cur_ep not in cluster:
@@ -178,8 +191,7 @@ class PE(Module):
 
                 self.log('info', "AddressOfEntryPoint cluster {0}".format(bold(cluster_name)))
 
-                self.log('table', dict(header=['MD5', 'Name'],
-                    rows=cluster_members))
+                self.log('table', dict(header=['MD5', 'Name'], rows=cluster_members))
 
             return
 
@@ -205,7 +217,7 @@ class PE(Module):
 
                 try:
                     cur_ep = pefile.PE(sample_path).OPTIONAL_HEADER.AddressOfEntryPoint
-                except:
+                except Exception:
                     continue
 
                 if ep == cur_ep:
@@ -213,13 +225,12 @@ class PE(Module):
 
             self.log('info', "Following are samples with AddressOfEntryPoint {0}".format(bold(ep)))
 
-            self.log('table', dict(header=['MD5', 'Name'],
-                rows=rows))
+            self.log('table', dict(header=['MD5', 'Name'], rows=rows))
 
     def compiletime(self):
 
         def get_compiletime(pe):
-            return datetime.datetime.fromtimestamp(pe.FILE_HEADER.TimeDateStamp)
+            return "{0} ({1})".format(pe.FILE_HEADER.TimeDateStamp, datetime.datetime.utcfromtimestamp(pe.FILE_HEADER.TimeDateStamp))
 
         if self.args.all:
             self.log('info', "Retrieving compile time for all stored samples...")
@@ -234,7 +245,7 @@ class PE(Module):
                 try:
                     cur_pe = pefile.PE(sample_path)
                     cur_compile_time = get_compiletime(cur_pe)
-                except:
+                except Exception:
                     continue
 
                 results.append([sample.name, sample.md5, cur_compile_time])
@@ -247,7 +258,8 @@ class PE(Module):
         if not self.__check_session():
             return
 
-        compile_time = get_compiletime(self.pe)
+        self.result_compile_time = get_compiletime(self.pe)
+        compile_time = self.result_compile_time
         self.log('info', "Compile Time: {0}".format(bold(compile_time)))
 
         if self.args.scan:
@@ -268,7 +280,7 @@ class PE(Module):
                 try:
                     cur_pe = pefile.PE(sample_path)
                     cur_compile_time = get_compiletime(cur_pe)
-                except:
+                except Exception:
                     continue
 
                 if compile_time == cur_compile_time:
@@ -292,7 +304,16 @@ class PE(Module):
     def peid(self):
 
         def get_signatures():
-            with file(os.path.join(VIPER_ROOT, 'data/peid/UserDB.TXT'), 'rt') as f:
+            userdb_path = None
+            for path_attempt in ['/usr/share/viper/peid/UserDB.TXT', os.path.join(VIPER_ROOT, 'data/peid/UserDB.TXT')]:
+                if os.path.exists(path_attempt):
+                    userdb_path = path_attempt
+                    break
+
+            if not userdb_path:
+                return
+
+            with open(userdb_path, 'rt', encoding='ISO-8859-1') as f:
                 sig_data = f.read()
 
             signatures = peutils.SignatureDatabase(data=sig_data)
@@ -337,7 +358,7 @@ class PE(Module):
                 try:
                     cur_pe = pefile.PE(sample_path)
                     cur_peid_matches = get_matches(cur_pe, signatures)
-                except:
+                except Exception:
                     continue
 
                 if peid_matches == cur_peid_matches:
@@ -453,7 +474,7 @@ class PE(Module):
                 # Open PE instance.
                 try:
                     cur_pe = pefile.PE(sample_path)
-                except:
+                except Exception:
                     continue
 
                 # Obtain the list of resources for the current iteration.
@@ -496,7 +517,7 @@ class PE(Module):
 
                 try:
                     cur_imphash = pefile.PE(sample_path).get_imphash()
-                except:
+                except Exception:
                     continue
 
                 if cur_imphash not in cluster:
@@ -511,8 +532,7 @@ class PE(Module):
 
                 self.log('info', "Imphash cluster {0}".format(bold(cluster_name)))
 
-                self.log('table', dict(header=['MD5', 'Name'],
-                    rows=cluster_members))
+                self.log('table', dict(header=['MD5', 'Name'], rows=cluster_members))
 
             return
 
@@ -542,7 +562,7 @@ class PE(Module):
 
                     try:
                         cur_imphash = pefile.PE(sample_path).get_imphash()
-                    except:
+                    except Exception:
                         continue
 
                     if imphash == cur_imphash:
@@ -587,7 +607,7 @@ class PE(Module):
                 # Open PE instance.
                 try:
                     cur_pe = pefile.PE(sample_path)
-                except:
+                except Exception:
                     continue
 
                 cur_cert_data = get_certificate(cur_pe)
@@ -668,7 +688,7 @@ class PE(Module):
                 auth.ValidateHashes(computed_content_hash)
                 auth.ValidateSignatures()
                 auth.ValidateCertChains(time.gmtime())
-            except Exception, e:
+            except Exception as e:
                 self.log('error', "Unable to validate PE certificate: {0}".format(str(e)))
                 return
 
@@ -678,7 +698,7 @@ class PE(Module):
 
             if auth.has_countersignature:
                 self.log('info', bold('Countersignature is present. Timestamp: {0} UTC'.format(
-                        time.asctime(time.gmtime(auth.counter_timestamp)))))
+                         time.asctime(time.gmtime(auth.counter_timestamp)))))
             else:
                 self.log('info', bold('Countersignature is not present.'))
 
@@ -687,17 +707,17 @@ class PE(Module):
 
             self.log('info', '{0}'.format(auth.cert_chain_head[2][0]))
             self.log('info', 'Chain not before: {0} UTC'.format(
-                    time.asctime(time.gmtime(auth.cert_chain_head[0]))))
+                     time.asctime(time.gmtime(auth.cert_chain_head[0]))))
             self.log('info', 'Chain not after: {0} UTC'.format(
-                    time.asctime(time.gmtime(auth.cert_chain_head[1]))))
+                     time.asctime(time.gmtime(auth.cert_chain_head[1]))))
 
             if auth.has_countersignature:
                 self.log('info', bold('Countersig chain head issued by:'))
                 self.log('info', '{0}'.format(auth.counter_chain_head[2]))
                 self.log('info', 'Countersig not before: {0} UTC'.format(
-                        time.asctime(time.gmtime(auth.counter_chain_head[0]))))
+                         time.asctime(time.gmtime(auth.counter_chain_head[0]))))
                 self.log('info', 'Countersig not after: {0} UTC'.format(
-                        time.asctime(time.gmtime(auth.counter_chain_head[1]))))
+                         time.asctime(time.gmtime(auth.counter_chain_head[1]))))
 
             self.log('info', bold('Certificates:'))
             for (issuer, serial), cert in auth.certificates.items():
@@ -711,13 +731,13 @@ class PE(Module):
                 not_before_time = not_before.ToPythonEpochTime()
                 not_after_time = not_after.ToPythonEpochTime()
                 self.log('info', 'Not Before: {0} UTC ({1})'.format(
-                        time.asctime(time.gmtime(not_before_time)), not_before[0]))
+                         time.asctime(time.gmtime(not_before_time)), not_before[0]))
                 self.log('info', 'Not After: {0} UTC ({1})'.format(
-                        time.asctime(time.gmtime(not_after_time)), not_after[0]))
+                         time.asctime(time.gmtime(not_after_time)), not_after[0]))
 
             if auth.trailing_data:
                 self.log('info', 'Signature Blob had trailing (unvalidated) data ({0} bytes): {1}'.format(
-                        len(auth.trailing_data), auth.trailing_data.encode('hex')))
+                         len(auth.trailing_data), auth.trailing_data.encode('hex')))
 
     def language(self):
 
@@ -738,7 +758,7 @@ class PE(Module):
 
         def is_cpp(data, cpp_count):
             for line in data:
-                if 'type_info' in line or 'RTTI' in line:
+                if b'type_info' in line or b'RTTI' in line:
                     cpp_count += 1
                     break
 
@@ -749,25 +769,25 @@ class PE(Module):
 
         def is_delphi(data):
             for line in data:
-                if 'Borland' in line:
-                    path = line.split('\\')
+                if b'Borland' in line:
+                    path = line.split(b'\\')
                     for p in path:
-                        if 'Delphi' in p:
+                        if b'Delphi' in p:
                             return True
             return False
 
         def is_vbdotnet(data):
             for line in data:
-                if 'Compiler' in line:
-                    stuff = line.split('.')
-                    if 'VisualBasic' in stuff:
+                if b'Compiler' in line:
+                    stuff = line.split(b'.')
+                    if b'VisualBasic' in stuff:
                         return True
 
             return False
 
         def is_autoit(data):
             for line in data:
-                if 'AU3!' in line:
+                if b'AU3!' in line:
                     return True
 
             return False
@@ -780,7 +800,7 @@ class PE(Module):
             return False
 
         def get_strings(content):
-            regexp = '[\x30-\x39\x41-\x5f\x61-\x7a\-\.:]{4,}'
+            regexp = b'[\x30-\x39\x41-\x5f\x61-\x7a\-\.:]{4,}'
             return re.findall(regexp, content)
 
         def find_language(iat, sample, content):
@@ -884,16 +904,35 @@ class PE(Module):
 
         rows = []
         for section in self.pe.sections:
+            if isinstance(section.Name, bytes):
+                section_name = section.Name.decode()
+            else:
+                section_name = section.Name
+            section_name = section_name.replace('\x00', '')
+            if self.args.dump:
+                file_handle = BytesIO(__sessions__.current.file.data)
+                file_handle.seek(int(section.PointerToRawData))
+                section_data = file_handle.read(int(section.SizeOfRawData))
+
+                dump_path = os.path.join(self.args.dump, '{}_{}.bin'.format(
+                    __sessions__.current.file.md5, section_name))
+
+                with open(dump_path, 'wb') as dump_handle:
+                    dump_handle.write(section_data)
+
+                self.log('info', "Dumped section to {}".format(dump_path))
             rows.append([
-                section.Name,
+                section_name,
                 hex(section.VirtualAddress),
                 hex(section.Misc_VirtualSize),
+                section.PointerToRawData,
                 section.SizeOfRawData,
                 section.get_entropy()
             ])
 
+        self.result_sections = rows
         self.log('info', "PE Sections:")
-        self.log('table', dict(header=['Name', 'RVA', 'VirtualSize', 'RawDataSize', 'Entropy'], rows=rows))
+        self.log('table', dict(header=['Name', 'RVA', 'VirtualSize', 'PointerToRawData', 'RawDataSize', 'Entropy'], rows=rows))
 
     def pehash(self):
         if not HAVE_PEHASH:
@@ -902,7 +941,7 @@ class PE(Module):
 
         current_pehash = None
         if __sessions__.is_set():
-            current_pehash = calculate_pehash(__sessions__.current.file.path)
+            current_pehash = calculate_pehash(data=__sessions__.current.file.data)
             self.log('info', "PEhash: {0}".format(bold(current_pehash)))
 
         if self.args.all or self.args.cluster or self.args.scan:

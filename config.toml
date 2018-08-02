@@ -1,7 +1,7 @@
 # malice/exe plugin configuration.
 
 name = 'exe'
-description = 'PDF - tool to triage PDF documents'
+description = 'EXE - tool to triage portable executables'
 category = 'exe'
 version = '0.1.0'
 
