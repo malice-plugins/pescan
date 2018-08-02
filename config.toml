@@ -1,0 +1,21 @@
+# malice/exe plugin configuration.
+
+name = 'exe'
+description = 'PDF - tool to triage PDF documents'
+category = 'exe'
+version = '0.1.0'
+
+accepts = [
+    'application/x-dosexec'
+    ]
+
+
+[system]
+cpu = 0.5
+ram = 256 # MB
+
+[settings]
+max_size = 3000000 # 3 MB
+max_extracted_file_count = 5 # Number of embedded files to extract
+max_carved_file_size = 500 # Bytes (note: this might be tied to balbuzard.Pattern())
+extract_limit = 10

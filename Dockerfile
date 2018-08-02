@@ -7,27 +7,34 @@ LABEL malice.plugin.category="pe"
 LABEL malice.plugin.mime="application/x-dosexec"
 LABEL malice.plugin.docker.engine="*"
 
-COPY . /src/github.com/maliceio/malice-pe
+ENV PDFID 0_2_4
+ENV PDF_PARSER 0_6_8
+
+COPY . /usr/sbin
 RUN apk --update add --no-cache python py-setuptools
 RUN apk --update add --no-cache -t .build-deps \
-                                   openssl-dev \
-                                   build-base \
-                                   python-dev \
-                                   libffi-dev \
-                                   musl-dev \
-                                   libc-dev \
-                                   py-pip \
-                                   gcc \
-                                   git \
-  && echo "===> Install pe scanner..." \
-  && cd /src/github.com/maliceio/malice-pe \
+  openssl-dev \
+  build-base \
+  python-dev \
+  libffi-dev \
+  musl-dev \
+  libc-dev \
+  py-pip \
+  gcc \
+  git \
+  && set -ex \
+  && echo "===> Install malice/exe plugin..." \
+  && cd /usr/sbin \
   && export PIP_NO_CACHE_DIR=off \
   && export PIP_DISABLE_PIP_VERSION_CHECK=on \
   && pip install --upgrade pip wheel \
-  && echo " [*] Install requirements..." \
+  && echo "\t[*] install requirements..." \
   && pip install -U -r requirements.txt \
-  && chmod +x pe.py \
-  && ln -s /src/github.com/maliceio/malice-pe/pe.py /bin/pescan \
+  && echo "\t[*] install pescan.py..." \
+  && chmod +x pescan.py \
+  && ln -s /usr/sbin/pescan.py /usr/sbin/pescan \
+  && echo "\t[*] clean up..." \
+  && rm requirements.txt Dockerfile \
   && apk del --purge .build-deps
 
 WORKDIR /malware

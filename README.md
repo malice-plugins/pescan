@@ -7,19 +7,21 @@ Malice PExecutable Plugin
 
 > This repository contains a **Dockerfile** of **malice/exe**.
 
-___
+---
 
-
-### Dependencies
+Dependencies
+------------
 
 -	[malice/alpine](https://hub.docker.com/r/malice/alpine/)
 
-### Installation
+Installation
+------------
 
 1.	Install [Docker](https://www.docker.io/).
 2.	Download [trusted build](https://hub.docker.com/r/malice/exe/) from public [DockerHub](https://hub.docker.com): `docker pull malice/exe`
 
-### Usage
+Usage
+-----
 
 ```
 docker run --rm -v /path/to/malware:/malware malice/exe EXE
@@ -31,7 +33,10 @@ docker run --rm -v /path/to/malware:/malware malice/exe EXE
 
 This will output to stdout and POST to malice results API webhook endpoint.
 
-### Sample Output **sandbox** JSON:
+Sample Output
+-------------
+
+### [JSON](https://github.com/malice-plugins/exe/blob/master/docs/results.json)
 
 ```json
 {
@@ -40,7 +45,7 @@ This will output to stdout and POST to malice results API webhook endpoint.
 }
 ```
 
-### Sample Output **sandbox** (Markdown Table):
+### [Markdown](https://github.com/malice-plugins/exe/blob/master/docs/SAMPLE.md)
 
 ---
 
@@ -55,28 +60,34 @@ Documentation
 -	[To create a pe scan micro-service](https://github.com/malice-plugins/exe/blob/master/docs/web.md)
 -	[To post results to a webhook](https://github.com/malice-plugins/exe/blob/master/docs/callback.md)
 
-### Issues
+Issues
+------
 
 Find a bug? Want more features? Find something missing in the documentation? Let me know! Please don't hesitate to [file an issue](https://github.com/malice-plugins/exe/issues/new)
 
-### CHANGELOG
+CHANGELOG
+---------
 
 See [`CHANGELOG.md`](https://github.com/malice-plugins/exe/blob/master/CHANGELOG.md)
 
-### Contributing
+Contributing
+------------
 
 [See all contributors on GitHub](https://github.com/malice-plugins/exe/graphs/contributors).
 
 Please update the [CHANGELOG.md](https://github.com/malice-plugins/exe/blob/master/CHANGELOG)
 
-### Credits
+Credits
+-------
 
 Heavily (if not entirely) influenced by the [viper PE module](https://github.com/viper-framework/viper/blob/master/viper/modules/pe.py)
 
-### TODO
+TODO
+----
 
-- [ ] add other's LICENSEs
+-	[ ] add other's LICENSEs
 
-### License
+License
+-------
 
-MIT Copyright (c) 2016-2017 **blacktop**
+MIT Copyright (c) 2016 **blacktop**

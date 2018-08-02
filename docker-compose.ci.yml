@@ -1,0 +1,16 @@
+version: '3'
+services:
+  elasticsearch:
+    image: malice/elasticsearch:6.3
+
+  app:
+    build:
+      context: .
+    links:
+     - elasticsearch
+    image: app
+    environment:
+      - MALICE_ELASTICSEARCH=elasticsearch
+    volumes:
+      - /tmp/sample:/malware
+    command: -V -t EICAR

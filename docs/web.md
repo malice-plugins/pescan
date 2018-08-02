@@ -2,7 +2,7 @@ Create a PEscan micro-service :new: :construction:
 ==================================================
 
 ```bash
-$ docker run -d -p 3993:3993 malice/pe web
+$ docker run -d -p 3993:3993 malice/exe web
 
 INFO[0000] web service listening on port :3993
 ```

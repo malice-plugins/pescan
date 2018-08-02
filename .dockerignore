@@ -2,9 +2,18 @@
 .git*
 .gitignore
 
-docs*
 .circleci*
+docs*
+vendor*
+tests*
+.circleci*
+docs*
+
 .vscode*
+.idea*
+venv*
+go*
+dump*
 
 README.md
 README.md.bu
@@ -12,3 +21,4 @@ NOTES.md
 LICENSE
 Makefile
 CHANGELOG.md
+docker-compose.ci.yml
