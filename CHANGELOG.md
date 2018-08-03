@@ -3,7 +3,7 @@ Change Log
 
 All notable changes to this project will be documented in this file.
 
-[v0.1.0] - 2017-00-00
+[v0.1.0] - 2018-00-00
 ---------------------
 
 ### Fixed
