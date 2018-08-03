@@ -1,0 +1,27 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+toml = "==0.9.4"
+click = "<7.0.0,>=6.0.0"
+elasticsearch = "<7.0.0,>=6.0.0"
+requests = "==2.19.1"
+cffi = "==1.5.0"
+"pyasn1" = "==0.1.9"
+pycparser = "==2.14"
+pycrypto = "*"
+pefile = {ref = "v2017.11.5", git = "https://github.com/erocarrera/pefile.git"}
+"pype32" = {git = "https://github.com/crackinglandia/pype32.git"}
+cryptography = {git = "https://github.com/pyca/cryptography.git"}
+signify = {git = "https://github.com/jdval/signify.git"}
+bitstring = "*"
+"Jinja2" = "==2.10"
+Flask = "==1.0.2"
+Werkzeug = "==0.14.1"
+
+[dev-packages]
+
+[requires]
+python_version = "3.7"
