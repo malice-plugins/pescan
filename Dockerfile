@@ -7,9 +7,6 @@ LABEL malice.plugin.category="pe"
 LABEL malice.plugin.mime="application/x-dosexec"
 LABEL malice.plugin.docker.engine="*"
 
-ENV PDFID 0_2_4
-ENV PDF_PARSER 0_6_8
-
 COPY . /usr/sbin
 RUN apk --update add --no-cache python py-setuptools
 RUN apk --update add --no-cache -t .build-deps \

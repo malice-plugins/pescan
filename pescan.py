@@ -4,7 +4,7 @@
 # This file is part of MaliceIO - https://github.com/malice-plugins/exe
 # See the file 'LICENSE' for copying permission.
 
-__description__ = 'MMalice PExecutable Plugin'
+__description__ = 'Malice PExecutable Plugin'
 __author__ = 'blacktop - <https://github.com/blacktop>'
 __version__ = '0.1.0'
 __date__ = '2018/08/01'
@@ -19,6 +19,8 @@ from flask import Flask, abort, jsonify, redirect, request
 from werkzeug.utils import secure_filename
 
 from elastic import Elastic
+from pehash import pehasher
+# from pdfparser.malice_pdfparser import MalPdfParser
 from utils import json2markdown, sha256_checksum
 
 log = logging.getLogger(__name__)
@@ -96,14 +98,12 @@ def exe():
 def scan(file_path, verbose, table, proxy, callback, eshost, timeout, extract):
     """Malice EXE Plugin."""
 
-    pe_results = {
-    }
-
     try:
         # set up logging
         init_logging(verbose)
 
         # TODO: check if EXE is too big (max size 3000000 ??)
+        pe_results = {'pehash': pehasher.calculate_pehash(file_path)}
 
         malice_scan = {
             'id': os.environ.get('MALICE_SCANID', sha256_checksum(file_path)),
@@ -179,11 +179,7 @@ def web():
                 file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 upload_file.save(file_path)
                 try:
-                    pe_results = {
-                        'pe': {
-
-                        }
-                    }
+                    pe_results = {'pe': {}}
                     pe_results['pe']['markdown'] = json2markdown(pe_results['pe'])
                     return jsonify(pe_results), 200
                 except Exception as e:

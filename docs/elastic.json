@@ -1,9 +1,9 @@
 {
-  "took": 3,
+  "took": 59,
   "timed_out": false,
   "_shards": {
-    "total": 1,
-    "successful": 1,
+    "total": 5,
+    "successful": 5,
     "skipped": 0,
     "failed": 0
   },
@@ -14,22 +14,17 @@
       {
         "_index": "malice",
         "_type": "samples",
-        "_id": "xrdg-GQBy1pEvTTbp5dB",
+        "_id": "befb88b89c2eb401900a68e9f5b78764203f2b48264fcc3f7121bf04a57fd408",
         "_score": 1,
         "_source": {
+          "scan_date": "2018-08-17T21:37:35.385439",
           "plugins": {
-            "av": {
-              "avg": {
-                "database": "4793/15856",
-                "engine": "13.0.3114",
-                "infected": true,
-                "markdown": "#### AVG\n| Infected      | Result      | Engine      | Updated      |\n|:-------------:|:-----------:|:-----------:|:------------:|\n| true | Found Win32/DH{CGE?} | 13.0.3114 | 20180801 |\n",
-                "result": "Found Win32/DH{CGE?}",
-                "updated": "20180801"
+            "document": {
+              "exe": {
+                "markdown": "\n### exe\n"
               }
             }
-          },
-          "scan_date": "2018-08-02T02:04:01.208952285Z"
+          }
         }
       }
     ]

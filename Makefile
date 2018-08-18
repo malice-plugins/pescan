@@ -3,8 +3,8 @@ ORG=malice
 NAME=exe
 CATEGORY=document
 VERSION=$(shell cat VERSION)
-MALWARE=test/malware
-EXTRACT=/malware/test/dump
+MALWARE=tests/malware
+EXTRACT=/malware/tests/dump
 MALICE_SCANID?=
 
 all: build size tag test test_markdown
@@ -47,7 +47,7 @@ endif
 malware:
 ifeq (,$(wildcard $(MALWARE)))
 	wget https://github.com/maliceio/malice-av/raw/master/samples/befb88b89c2eb401900a68e9f5b78764203f2b48264fcc3f7121bf04a57fd408 -O $(MALWARE)
-	cd test; echo "TEST" > not.malware
+	cd tests; echo "TEST" > not.malware
 endif
 
 .PHONY: test
@@ -119,14 +119,19 @@ clean: clean_pyc ## Clean docker image and stop all running containers
 	rm $(MALWARE) || true
 	rm README.md.bu || true
 
-.PHONY: clean_pyc
-clean_pyc:  ## Clean all compiled python files
+## Clean all compiled python files
+clean_pyc:
 	find . -name "*.pyc" -exec rm -f {} \;
 	rm *.log || true
 	rm test/dump/* || true
 
 # Absolutely awesome: http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
-help:
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+.PHONY: help
+help: Makefile
+	@echo
+	@echo " Choose a command run in "$(PROJECTNAME)":"
+	@echo
+	@sed -n 's/^##//p' $< | column -t -s ':' |  sed -e 's/^/ /'
+	@echo
 
 .DEFAULT_GOAL := all
