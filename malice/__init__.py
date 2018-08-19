@@ -13,6 +13,7 @@ import logging
 import re
 import tempfile
 import time
+from io import BytesIO
 from os import path
 
 import chardet
@@ -23,7 +24,7 @@ import peutils
 from lcid import LCID
 from pehash.pehasher import calculate_pehash
 from sig import get_signify
-from utils import get_md5, get_type, sha256_checksum
+from utils import get_entropy, get_md5, get_sha256, get_type, sha256_checksum
 from utils.charset import safe_str, translate_str
 
 # from verifysigs.asn1utils import dn
@@ -46,17 +47,18 @@ class MalPEFile(object):
         self.result_sections = None
 
     def info(self):
+        info = {}
         if hasattr(self.pe, 'OriginalFilename'):
-            self.results['original_filename'] = self.pe.OriginalFilename
+            info['original_filename'] = self.pe.OriginalFilename
         if hasattr(self.pe, 'FileDescription'):
-            self.results['file_description'] = self.pe.FileDescription
+            info['file_description'] = self.pe.FileDescription
         if hasattr(self.pe, 'OPTIONAL_HEADER'):
-            self.results['image_base'] = self.pe.OPTIONAL_HEADER.ImageBase
-            self.results['size_of_image'] = self.pe.OPTIONAL_HEADER.SizeOfImage
-            self.results['linker_version'] = "{:02d}.{:02d}".format(self.pe.OPTIONAL_HEADER.MajorLinkerVersion,
-                                                                    self.pe.OPTIONAL_HEADER.MinorLinkerVersion)
-            self.results['os_version'] = "{:02d}.{:02d}".format(self.pe.OPTIONAL_HEADER.MajorOperatingSystemVersion,
-                                                                self.pe.OPTIONAL_HEADER.MinorOperatingSystemVersion)
+            info['image_base'] = self.pe.OPTIONAL_HEADER.ImageBase
+            info['size_of_image'] = self.pe.OPTIONAL_HEADER.SizeOfImage
+            info['linker_version'] = "{:02d}.{:02d}".format(self.pe.OPTIONAL_HEADER.MajorLinkerVersion,
+                                                            self.pe.OPTIONAL_HEADER.MinorLinkerVersion)
+            info['os_version'] = "{:02d}.{:02d}".format(self.pe.OPTIONAL_HEADER.MajorOperatingSystemVersion,
+                                                        self.pe.OPTIONAL_HEADER.MinorOperatingSystemVersion)
             data = []
             for data_directory in self.pe.OPTIONAL_HEADER.DATA_DIRECTORY:
                 if data_directory.Size or data_directory.VirtualAddress:
@@ -67,8 +69,8 @@ class MalPEFile(object):
                     })
             self.results['data_directories'] = data
         if hasattr(self.pe, 'FILE_HEADER'):
-            self.results['number_of_sections'] = self.pe.FILE_HEADER.NumberOfSections
-            self.results['machine_type'] = "{} ({})".format(
+            info['number_of_sections'] = self.pe.FILE_HEADER.NumberOfSections
+            info['machine_type'] = "{} ({})".format(
                 hex(self.pe.FILE_HEADER.Machine), pefile.MACHINE_TYPE[self.pe.FILE_HEADER.Machine])
         if hasattr(self.pe, 'RICH_HEADER') and self.pe.RICH_HEADER is not None:
             rich_header_info = []
@@ -81,6 +83,7 @@ class MalPEFile(object):
                 }
                 rich_header_info.append(line)
             self.results['rich_header_info'] = rich_header_info
+        self.results['info'] = info
 
     def debug(self):
         if hasattr(self.pe, 'DebugTimeDateStamp'):
@@ -109,13 +112,15 @@ class MalPEFile(object):
                     else:
                         dll = entry.dll
                     log.info("DLL: {0}".format(dll))
+                    dlls = {dll: []}
                     for symbol in entry.imports:
                         if isinstance(symbol.name, bytes):
                             name = symbol.name.decode()
                         else:
                             name = symbol.name
-                        imports.append(dict(address=hex(symbol.address), name=name))
-                        # self.log('item', "{0}: {1}".format(hex(symbol.address), name))
+                        dlls[dll].append(dict(address=hex(symbol.address), name=name))
+                    imports.append(dlls)
+                    # self.log('item', "{0}: {1}".format(hex(symbol.address), name))
                 except Exception:
                     continue
         self.results['imports'] = imports
@@ -140,10 +145,10 @@ class MalPEFile(object):
             self.results['exports_timestamp'] = time.ctime(self.pe.DIRECTORY_ENTRY_EXPORT.struct.TimeDateStamp)
 
     def entrypoint(self):
-        self.results['entrypoint'] = hex(self.pe.OPTIONAL_HEADER.AddressOfEntryPoint)
+        self.results['info']['entrypoint'] = hex(self.pe.OPTIONAL_HEADER.AddressOfEntryPoint)
 
     def compiletime(self):
-        self.results['compiletime'] = {
+        self.results['info']['compiletime'] = {
             'unix': self.pe.FILE_HEADER.TimeDateStamp,
             'datetime': '{}'.format(datetime.datetime.utcfromtimestamp(self.pe.FILE_HEADER.TimeDateStamp))
         }
@@ -201,8 +206,10 @@ class MalPEFile(object):
                                     for resource_lang in resource_id.directory.entries:
                                         data = pe.get_data(resource_lang.data.struct.OffsetToData,
                                                            resource_lang.data.struct.Size)
+                                        entropy = get_entropy(data)
                                         filetype = get_type(data)
                                         md5 = get_md5(data)
+                                        sha256 = get_sha256(data)
                                         language = pefile.LANG.get(resource_lang.data.lang, None)
                                         language_desc = LCID.get(resource_lang.id, 'unknown language')
                                         sublanguage = pefile.get_sublang_name_for_lang(
@@ -211,8 +218,8 @@ class MalPEFile(object):
                                         size = ('%-8s' % hex(resource_lang.data.struct.Size)).strip()
 
                                         resource = [
-                                            count, name, offset, md5, size, filetype, language, sublanguage,
-                                            language_desc
+                                            count, name, offset, md5, sha256, size, filetype, entropy, language,
+                                            sublanguage, language_desc
                                         ]
 
                                         # Dump resources if requested
@@ -251,11 +258,13 @@ class MalPEFile(object):
                 'name': resource[1],
                 'offset': resource[2],
                 'md5': resource[3],
-                'size': resource[4],
-                'type': resource[5],
-                'language': resource[6],
-                'sublanguage': resource[7],
-                'language_desc': resource[8],
+                'sha256': resource[4],
+                'size': resource[5],
+                'type': resource[6],
+                'entropy': resource[7],
+                'language': resource[8],
+                'sublanguage': resource[9],
+                'language_desc': resource[10],
             })
 
     def resource_versioninfo(self):
@@ -509,13 +518,13 @@ class MalPEFile(object):
                                 self.results['resource_strings'] = tags
 
     def slack_space(self):
-        if self.results['calculated_file_size'] > 0 and (len(self.pe.__data__) > self.results['calculated_file_size']):
-            slack_size = len(self.pe.__data__) - self.results['calculated_file_size']
+        if self.results['info']['calculated_file_size'] > 0 and (len(self.pe.__data__) > self.results['info']['calculated_file_size']):
+            slack_size = len(self.pe.__data__) - self.results['info']['calculated_file_size']
             if self.dump:
                 slack_path = path.join(self.dump, '{}_slack.bin'.format(self.sha256))
                 with open(slack_path, 'wb') as shandle:
                     shandle.write(
-                        self.pe.__data__[self.results['calculated_file_size']:self.results['calculated_file_size'] +
+                        self.pe.__data__[self.results['info']['calculated_file_size']:self.results['info']['calculated_file_size'] +
                                          slack_size])
 
     def imphash(self):
@@ -744,7 +753,7 @@ class MalPEFile(object):
                     dump_handle.write(section_data)
 
             # calculated file size
-            self.results['calculated_file_size'] = int(section.VirtualAddress) + int(section.Misc_VirtualSize)
+            self.results['info']['calculated_file_size'] = int(section.VirtualAddress) + int(section.Misc_VirtualSize)
 
             sections.append({
                 'name': section_name,
@@ -752,7 +761,8 @@ class MalPEFile(object):
                 'virtual_size': hex(section.Misc_VirtualSize),
                 'pointer_to_raw_data': section.PointerToRawData,
                 'raw_data_size': section.SizeOfRawData,
-                'entropy': section.get_entropy()
+                'entropy': section.get_entropy(),
+                'md5': section.get_hash_md5(),
             })
 
         self.results['sections'] = sections
@@ -770,6 +780,7 @@ class MalPEFile(object):
             self.results['signature'] = get_signify(self.file, log=log)
 
             self.pe = pefile.PE(self.file)
+            # print(self.pe.dump_info())
 
             # run all the analysis
             self.info()

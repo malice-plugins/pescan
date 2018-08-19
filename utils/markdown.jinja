@@ -1,100 +1,73 @@
-### pdf
-{% if pdfid is not none -%}
-#### PDFiD
- - **PDF Header:** `{{ pdfid['header'] }}`
- - **Total Entropy:** `{{ pdfid['totalEntropy'] }}`
- - **Entropy In Streams:** `{{ pdfid['streamEntropy'] }}`
- - **Entropy Out Streams:** `{{ pdfid['nonStreamEntropy'] }}`
- - **Count %% EOF:** `{{ pdfid['countEof'] }}`
- - **Data After EOF:** `{{ pdfid['countChatAfterLastEof'] }}`
+### exe
 
-| Keyword     | Count     |
-|-------------|-----------|
-{% for keyword in pdfid['keywords'].get('keyword') -%}
-| {{ keyword.get('name') }}      | {{ keyword.get('count') }}        |
-{% endfor -%}
-{% if pdfid['heuristics']['embeddedfile'].get('score') > 0 %}
-##### Embedded File
-> **Score:** `{{ pdfid['heuristics']['embeddedfile'].get('score') }}`
+{% if exe is not none -%}
+{% if exe.get('info') -%}
+#### Header
 
-**Reason:**
- - {{ pdfid['heuristics']['embeddedfile'].get('reason') }}
-{%- endif %}
-{% if pdfid['heuristics']['nameobfuscation'].get('score') > 0 -%}
-##### Name Obfuscation
-> **Score:** `{{ pdfid['heuristics']['nameobfuscation'].get('score') }}`
-**Reason:**
- - {{ pdfid['heuristics']['nameobfuscation'].get('reason') }}
-{%- endif %}
-{% if pdfid['heuristics']['triage'].get('score') > 0 -%}
-##### Triage
-> **Score:** `{{ pdfid['heuristics']['triage'].get('score') }}`
+ - **Target Machine:** `{{ exe['info'].get('machine_type') }}`
+ - **Compilation Timestamp:** `{{ exe['info']['compiletime'].get('datetime') }}`
+ - **Entry Point:** `{{ exe['info'].get('entrypoint') }}`
+ - **Contained Sections:** `{{ exe['info'].get('number_of_sections') }}`
+{% endif %}
+{% if exe.get('sections') -%}
+#### Sections
 
-**Reasons:**
-{% for reason in pdfid['heuristics']['triage'].get('reasons') -%}
- - {{ reason }}
+| Name | Virtual Address | Virtual Size | Raw Size | Entropy | MD5 |
+|------|-----------------|--------------|----------|---------|-----|
+{% for sec in exe.get('sections') -%}
+| {{ sec.get('name') }} | {{ sec.get('rva') }} | {{ sec.get('virtual_size') }} | {{ sec.get('raw_data_size') }} | {{ "%.2f"|format(sec.get('entropy')) }} | {{ sec.get('md5') }} |
 {% endfor -%}
 {%- endif %}
-{% if pdfid['heuristics']['suspicious'].get('score') > 0 -%}
-##### Suspicious Properties
-> **Score:** `{{ pdfid['heuristics']['suspicious'].get('score') }}`
+{% if exe.get('imports') -%}
+#### Imports
+{% for dll in exe.get('imports') -%}
+    {% for dll_name, imports in dll.items() %}
+##### `{{ dll_name }}`
+{% for import in imports -%}
+ - {{ import.get('name') }}
+{% endfor -%}
+{% endfor -%}
+{% endfor -%}
+{%- endif %}
+{% if exe.get('exports') -%}
+#### Exports
+{% for dll in exe.get('exports') -%}
+    {% for dll_name, exports in dll.items() %}
+##### `{{ dll_name }}`
+{% for export in exports -%}
+ - {{ export.get('name') }}
+{% endfor -%}
+{% endfor -%}
+{% endfor -%}
+{%- endif %}
+{% if exe.get('resources') -%}
+#### Resources
 
-**Reasons:**
-{% for reason in pdfid['heuristics']['suspicious'].get('reasons') -%}
- - {{ reason }}
+| SHA-256 | Size | Entropy | File Type | Type | Language |
+|---------|------|---------|-----------|------|----------|
+{% for res in exe.get('resources') -%}
+| {{ res.get('sha256') }} | {{ res.get('size') }} | {{ "%.2f"|format(res.get('entropy')) }} | {{ res.get('filetype') }} | {{ res.get('name') }} | {{ res.get('language_desc') }} |
 {% endfor -%}
 {%- endif %}
-{%- endif %}
-{% if streams is not none -%}
-#### pdf-parser
+{% if exe.get('resource_versioninfo') -%}
+#### File Version Information
 
-##### Stats
-{% for stat in streams.get('stats') -%}
- - `{{ stat }}`
-{% endfor -%}
-
-{% if streams.get('tags') %}
-##### Tags
-{% for key, values in streams.get('tags').items() -%}
-**{{ key }}:**
-{% for v in values -%}
- - `{{ v }}`
-{% endfor -%}
-{% endfor -%}
+ - **Copyright:** `{{ exe['resource_versioninfo'].get('legalcopyright')  }}`
+ - **Product:** `{{ exe['resource_versioninfo'].get('productname') }}`
+ - **Description:** `{{ exe['resource_versioninfo'].get('file_description') }}`
+ - **Original Name:** `{{ exe['resource_versioninfo'].get('original_filename') }}`
+ - **Internal Name:** `{{ exe['resource_versioninfo'].get('internalname') }}`
+ - **File Version:** `{{ exe['resource_versioninfo'].get('fileversion') }}`
 {%- endif %}
-{% if streams.get('embedded') -%}
-##### Embedded Files
-| Object      | Sha256   |
-|-------------|----------|
-{% for embedded in streams.get('embedded') -%}
-| {{ embedded.get('object') }} | {{ embedded.get('sha256') }} |
-{% endfor -%}
+{% if exe.get('signature') %}
+#### Signature Info
+##### Signature Verification
+> {{ exe['signature'].get('heuristic') }}
 {%- endif %}
-{% if streams.get('objstm') -%}
-##### Object Streams
-| Object      | Sha256   |
-|-------------|----------|
-{% for objstm in streams.get('objstm') -%}
-| {{ objstm.get('object') }} | {{ objstm.get('sha256') }} |
+{% if exe.get('peid') %}
+#### PEiD
+{% for peid in exe.get('peid') -%}
+ - `{{ peid }}`
 {% endfor -%}
-{%- endif %}
-{% if streams.get('carved') -%}
-{% if streams['carved'].get('files') -%}
-##### Carved Files
-| Object     | Content  | Sha256 |
-|------------|----------|--------|
-{% for cfile in streams['carved'].get('files') -%}
-| {{ cfile.get('object') }} | {{ cfile.get('keyword') }} | {{ cfile.get('sha256') }} |
-{% endfor -%}
-{%- endif %}
-{% if streams['carved'].get('contents') -%}
-##### Carved Content
-{% for content in streams['carved'].get('contents') -%}
-**{{ content.get('key') }}:**
-```
-{{ content.get('content') }}
-```
-{% endfor -%}
-{%- endif %}
 {%- endif %}
 {%- endif %}

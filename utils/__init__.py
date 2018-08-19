@@ -3,6 +3,8 @@
 # See the file 'LICENSE' for copying permission.
 
 import hashlib
+import math
+from collections import Counter
 
 import magic
 from jinja2 import BaseLoader, Environment
@@ -27,6 +29,22 @@ def get_type(data):
     return file_type
 
 
+def get_entropy(data):
+    """Calculate the entropy of a chunk of data."""
+
+    if len(data) == 0:
+        return 0.0
+
+    occurences = Counter(bytearray(data))
+
+    entropy = 0
+    for x in occurences.values():
+        p_x = float(x) / len(data)
+        entropy -= p_x * math.log(p_x, 2)
+
+    return entropy
+
+
 def sha256_checksum(filename, block_size=65536):
     sha256 = hashlib.sha256()
     with open(filename, 'rb') as f:
@@ -41,15 +59,14 @@ def get_md5(data):
     return md5.hexdigest()
 
 
+def get_sha256(data):
+    sha256 = hashlib.sha256()
+    sha256.update(data)
+    return sha256.hexdigest()
+
+
 def json2markdown(json_data):
     """Convert JSON output to MarkDown table"""
 
-    markdown = '''
-### exe
-{% if pdfid is not none -%}
-{%- endif %}
-'''
-
-    return Environment(loader=BaseLoader()).from_string(markdown).render(
-        pdfid=json_data.get('pdfid'), streams=json_data.get('streams'))
-
+    with open('utils/markdown.jinja', 'r') as mj:
+        return Environment(loader=BaseLoader()).from_string(mj.read()).render(exe=json_data)
