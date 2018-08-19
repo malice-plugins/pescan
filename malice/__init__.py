@@ -13,11 +13,11 @@ import logging
 import re
 import tempfile
 import time
-from io import BytesIO, open
 from os import path
 
 import pefile
 import peutils
+from future.builtins import open
 
 from lcid import LCID
 from pehash.pehasher import calculate_pehash
@@ -544,10 +544,10 @@ class MalPEFile(object):
 
     def run(self):
 
-        file_io = BytesIO(open(self.file, "rb").read())
-        get_signify(file_io)
-
         try:
+            # get cert info
+            self.results['signature'] = get_signify(self.file, log=log)
+
             self.pe = pefile.PE(self.file)
 
             # run all the analysis
@@ -572,6 +572,6 @@ class MalPEFile(object):
             if e.value != "DOS Header magic not found.":
                 self.results['error'] = "this file looks like a PE but failed loading inside PE file. [", e.value, "]"
         except Exception as e:
-            log.error(e)
+            log.exception(e)
 
         return self.results
