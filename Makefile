@@ -1,13 +1,13 @@
 REPO=malice-plugins/exe
 ORG=malice
 NAME=exe
-CATEGORY=document
+CATEGORY=exe
 VERSION=$(shell cat VERSION)
 MALWARE?=tests/malware
 EXTRACT?=/malware/tests/dump
 MALICE_SCANID?=
 
-all: build size tag test test_markdown
+all: build size tag test_all
 
 .PHONY: build
 build:
@@ -50,6 +50,9 @@ ifeq (,$(wildcard $(MALWARE)))
 	cd tests; echo "TEST" > not.malware
 endif
 
+.PHONY: test_all
+test_all: test test_elastic test_markdown test_web
+
 .PHONY: test
 test: malware
 	@echo "===> ${NAME} --help"
@@ -72,17 +75,19 @@ test_markdown: test_elastic
 	# http localhost:9200/malice/_search query:=@docs/query.json | jq . > docs/elastic.json
 	cat docs/elastic.json | jq -r '.hits.hits[] ._source.plugins.${CATEGORY}.${NAME}.markdown' > docs/SAMPLE.md
 
-
 .PHONY: test_malice
 test_malice:
 	@echo "===> $(ORG)/$(NAME):$(VERSION) testing with running malice elasticsearch DB (update existing sample)"
 	@docker run --rm -e MALICE_SCANID=$(MALICE_SCANID) -e MALICE_ELASTICSEARCH=elasticsearch --link malice-elastic:elasticsearch -v $(PWD):/malware $(ORG)/$(NAME):$(VERSION) scan -t -vvvv $(MALWARE)
 
 .PHONY: test_web
-test_web:
+test_web: malware stop
 	@echo "===> Starting web service"
-	@docker run --rm -p 3993:3993 $(ORG)/$(NAME):$(VERSION) web
-	# http -f localhost:3993/scan malware@test/eicar.pdf
+	@docker run -d --name $(NAME)-web -p 3993:3993 $(ORG)/$(NAME):$(VERSION) web
+	sleep 10; http -f localhost:3993/scan malware@tests/hw2.exe
+	@echo "===> Stopping web service"
+	@docker logs $(NAME)-web
+	@docker rm -f $(NAME)-web
 
 .PHONY: run
 run: stop ## Run docker container

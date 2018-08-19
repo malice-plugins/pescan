@@ -3,7 +3,7 @@ FROM malice/alpine
 LABEL maintainer "https://github.com/blacktop"
 
 LABEL malice.plugin.repository = "https://github.com/malice-plugins/exe.git"
-LABEL malice.plugin.category="pe"
+LABEL malice.plugin.category="exe"
 LABEL malice.plugin.mime="application/x-dosexec"
 LABEL malice.plugin.docker.engine="*"
 

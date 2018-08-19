@@ -113,7 +113,7 @@ def scan(file_path, verbose, table, proxy, callback, eshost, timeout, extract, p
         malice_scan = {
             'id': os.environ.get('MALICE_SCANID', sha256_checksum(file_path)),
             'name': 'exe',
-            'category': 'document',
+            'category': 'exe',
             'results': pe_results
         }
         malice_scan['results']['markdown'] = json2markdown(pe_results)
@@ -158,6 +158,7 @@ def web():
     app = Flask(__name__)
     app.config['UPLOAD_FOLDER'] = '/malware'
     app.config['OUTPUT_FOLDER'] = '/malware/dump'
+    app.config['PEID_PATH'] = os.path.join(path[0], 'peid/UserDB.TXT')
     # app.config['UPLOAD_FOLDER'] = 'test/web'
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
@@ -185,11 +186,11 @@ def web():
                 file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 upload_file.save(file_path)
                 try:
-                    pe_results = {'pe': {}}
-                    pe_results['pe']['markdown'] = json2markdown(pe_results['pe'])
+                    pe_results = MalPEFile(file_path, peid_db_path=app.config['PEID_PATH']).run()
+                    # pe_results['markdown'] = json2markdown(pe_results)
                     return jsonify(pe_results), 200
                 except Exception as e:
-                    log.exception("failed to run malice plugin: {}".format('pe'))
+                    log.exception("failed to run malice plugin: {}".format('exe'))
                     return e, 500
                 finally:
                     try:
