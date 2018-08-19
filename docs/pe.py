@@ -51,29 +51,36 @@ class PE(Module):
         subparsers.add_parser('exports', help='List PE exports')
 
         parser_ep = subparsers.add_parser('entrypoint', help='Show and scan for AddressOfEntryPoint')
-        parser_ep.add_argument('-a', '--all', action='store_true', help='Prints the AddressOfEntryPoint of all files in the project')
+        parser_ep.add_argument(
+            '-a', '--all', action='store_true', help='Prints the AddressOfEntryPoint of all files in the project')
         parser_ep.add_argument('-c', '--cluster', action='store_true', help='Cluster all files in the project')
         parser_ep.add_argument('-s', '--scan', action='store_true', help='Scan repository for matching samples')
 
         parser_res = subparsers.add_parser('resources', help='List PE resources')
-        parser_res.add_argument('-d', '--dump', metavar='folder', help='Destination directory to store resource files in')
-        parser_res.add_argument('-o', '--open', metavar='resource number', type=int, help='Open a session on the specified resource')
+        parser_res.add_argument(
+            '-d', '--dump', metavar='folder', help='Destination directory to store resource files in')
+        parser_res.add_argument(
+            '-o', '--open', metavar='resource number', type=int, help='Open a session on the specified resource')
         parser_res.add_argument('-s', '--scan', action='store_true', help='Scan the repository for common resources')
 
         parser_imp = subparsers.add_parser('imphash', help='Get and scan for imphash')
         parser_imp.add_argument('-s', '--scan', action='store_true', help='Scan for all samples with same imphash')
-        parser_imp.add_argument('-c', '--cluster', action='store_true', help='Cluster repository by imphash (careful, could be massive)')
+        parser_imp.add_argument(
+            '-c', '--cluster', action='store_true', help='Cluster repository by imphash (careful, could be massive)')
 
         parser_comp = subparsers.add_parser('compiletime', help='Show the compiletime')
-        parser_comp.add_argument('-a', '--all', action='store_true', help='Retrieve compile time for all stored samples')
-        parser_comp.add_argument('-s', '--scan', action='store_true', help='Scan the repository for common compile time')
+        parser_comp.add_argument(
+            '-a', '--all', action='store_true', help='Retrieve compile time for all stored samples')
+        parser_comp.add_argument(
+            '-s', '--scan', action='store_true', help='Scan the repository for common compile time')
         parser_comp.add_argument('-w', '--window', type=int, help='Specify an optional time window in minutes')
 
         parser_peid = subparsers.add_parser('peid', help='Show the PEiD signatures')
         parser_peid.add_argument('-s', '--scan', action='store_true', help='Scan the repository for PEiD signatures')
 
         parser_sec = subparsers.add_parser('security', help='Show digital signature')
-        parser_sec.add_argument('-d', '--dump', metavar='folder', help='Destination directory to store digital signature in')
+        parser_sec.add_argument(
+            '-d', '--dump', metavar='folder', help='Destination directory to store digital signature in')
         parser_sec.add_argument('-a', '--all', action='store_true', help='Find all samples with a digital signature')
         parser_sec.add_argument('-s', '--scan', action='store_true', help='Scan the repository for common certificates')
         parser_sec.add_argument('-c', '--check', action='store_true', help='Check authenticode information')
@@ -82,11 +89,14 @@ class PE(Module):
         parser_lang.add_argument('-s', '--scan', action='store_true', help='Scan the repository')
 
         parser_sect = subparsers.add_parser('sections', help='List PE Sections')
-        parser_sect.add_argument('-d', '--dump', metavar='folder', help='Destionation directory to dump all sections in')
+        parser_sect.add_argument(
+            '-d', '--dump', metavar='folder', help='Destionation directory to dump all sections in')
 
         parser_peh = subparsers.add_parser('pehash', help='Calculate the PEhash and compare them')
-        parser_peh.add_argument('-a', '--all', action='store_true', help='Prints the PEhash of all files in the project')
-        parser_peh.add_argument('-c', '--cluster', action='store_true', help='Calculate and cluster all files in the project')
+        parser_peh.add_argument(
+            '-a', '--all', action='store_true', help='Prints the PEhash of all files in the project')
+        parser_peh.add_argument(
+            '-c', '--cluster', action='store_true', help='Calculate and cluster all files in the project')
         parser_peh.add_argument('-s', '--scan', action='store_true', help='Scan repository for matching samples')
 
         self.pe = None
@@ -136,7 +146,9 @@ class PE(Module):
         self.log('info', "Exports:")
         if hasattr(self.pe, 'DIRECTORY_ENTRY_EXPORT'):
             for symbol in self.pe.DIRECTORY_ENTRY_EXPORT.symbols:
-                self.log('item', "{0}: {1} ({2})".format(hex(self.pe.OPTIONAL_HEADER.ImageBase + symbol.address), symbol.name, symbol.ordinal))
+                self.log(
+                    'item', "{0}: {1} ({2})".format(
+                        hex(self.pe.OPTIONAL_HEADER.ImageBase + symbol.address), symbol.name, symbol.ordinal))
 
     def entrypoint(self):
         if self.args.scan and self.args.cluster:
@@ -230,7 +242,8 @@ class PE(Module):
     def compiletime(self):
 
         def get_compiletime(pe):
-            return "{0} ({1})".format(pe.FILE_HEADER.TimeDateStamp, datetime.datetime.utcfromtimestamp(pe.FILE_HEADER.TimeDateStamp))
+            return "{0} ({1})".format(pe.FILE_HEADER.TimeDateStamp,
+                                      datetime.datetime.utcfromtimestamp(pe.FILE_HEADER.TimeDateStamp))
 
         if self.args.all:
             self.log('info', "Retrieving compile time for all stored samples...")
@@ -393,11 +406,13 @@ class PE(Module):
                             for resource_id in resource_type.directory.entries:
                                 if hasattr(resource_id, 'directory'):
                                     for resource_lang in resource_id.directory.entries:
-                                        data = pe.get_data(resource_lang.data.struct.OffsetToData, resource_lang.data.struct.Size)
+                                        data = pe.get_data(resource_lang.data.struct.OffsetToData,
+                                                           resource_lang.data.struct.Size)
                                         filetype = get_type(data)
                                         md5 = get_md5(data)
                                         language = pefile.LANG.get(resource_lang.data.lang, None)
-                                        sublanguage = pefile.get_sublang_name_for_lang(resource_lang.data.lang, resource_lang.data.sublang)
+                                        sublanguage = pefile.get_sublang_name_for_lang(
+                                            resource_lang.data.lang, resource_lang.data.sublang)
                                         offset = ('%-8s' % hex(resource_lang.data.struct.OffsetToData)).strip()
                                         size = ('%-8s' % hex(resource_lang.data.struct.Size)).strip()
 
@@ -413,7 +428,9 @@ class PE(Module):
                                             else:
                                                 folder = tempfile.mkdtemp()
 
-                                            resource_path = os.path.join(folder, '{0}_{1}_{2}'.format(__sessions__.current.file.md5, offset, name))
+                                            resource_path = os.path.join(
+                                                folder, '{0}_{1}_{2}'.format(__sessions__.current.file.md5, offset,
+                                                                             name))
                                             resource.append(resource_path)
 
                                             with open(resource_path, 'wb') as resource_handle:
@@ -540,7 +557,9 @@ class PE(Module):
             try:
                 imphash = self.pe.get_imphash()
             except AttributeError:
-                self.log('error', "No imphash support, upgrade pefile to a version >= 1.2.10-139 (`pip install --upgrade pefile`)")
+                self.log(
+                    'error',
+                    "No imphash support, upgrade pefile to a version >= 1.2.10-139 (`pip install --upgrade pefile`)")
                 return
 
             self.log('info', "Imphash: {0}".format(bold(imphash)))
@@ -656,8 +675,9 @@ class PE(Module):
                 cert_handle.write(cert_data)
 
             self.log('info', "Dumped certificate to {0}".format(cert_path))
-            self.log('info', "You can parse it using the following command:\n\t" +
-                     bold("openssl pkcs7 -inform DER -print_certs -text -in {0}".format(cert_path)))
+            self.log(
+                'info', "You can parse it using the following command:\n\t" + bold(
+                    "openssl pkcs7 -inform DER -print_certs -text -in {0}".format(cert_path)))
 
         # TODO: do scan for certificate's serial number.
         if self.args.scan:
@@ -674,7 +694,10 @@ class PE(Module):
         # TODO: need to add more error handling and figure out why so many samples are failing.
         if self.args.check:
             if not HAVE_VERIFYSIGS:
-                self.log('error', "Dependencies missing for authenticode validation. Please install M2Crypto and pyasn1 (`pip install pyasn1 M2Crypto`)")
+                self.log(
+                    'error',
+                    "Dependencies missing for authenticode validation. Please install M2Crypto and pyasn1 (`pip install pyasn1 M2Crypto`)"
+                )
                 return
 
             try:
@@ -697,8 +720,10 @@ class PE(Module):
             self.log('info', 'URL: {0}'.format(auth.program_url))
 
             if auth.has_countersignature:
-                self.log('info', bold('Countersignature is present. Timestamp: {0} UTC'.format(
-                         time.asctime(time.gmtime(auth.counter_timestamp)))))
+                self.log(
+                    'info',
+                    bold('Countersignature is present. Timestamp: {0} UTC'.format(
+                        time.asctime(time.gmtime(auth.counter_timestamp)))))
             else:
                 self.log('info', bold('Countersignature is not present.'))
 
@@ -706,18 +731,16 @@ class PE(Module):
             self.log('info', '{0}'.format(auth.signing_cert_id[0]))
 
             self.log('info', '{0}'.format(auth.cert_chain_head[2][0]))
-            self.log('info', 'Chain not before: {0} UTC'.format(
-                     time.asctime(time.gmtime(auth.cert_chain_head[0]))))
-            self.log('info', 'Chain not after: {0} UTC'.format(
-                     time.asctime(time.gmtime(auth.cert_chain_head[1]))))
+            self.log('info', 'Chain not before: {0} UTC'.format(time.asctime(time.gmtime(auth.cert_chain_head[0]))))
+            self.log('info', 'Chain not after: {0} UTC'.format(time.asctime(time.gmtime(auth.cert_chain_head[1]))))
 
             if auth.has_countersignature:
                 self.log('info', bold('Countersig chain head issued by:'))
                 self.log('info', '{0}'.format(auth.counter_chain_head[2]))
                 self.log('info', 'Countersig not before: {0} UTC'.format(
-                         time.asctime(time.gmtime(auth.counter_chain_head[0]))))
+                    time.asctime(time.gmtime(auth.counter_chain_head[0]))))
                 self.log('info', 'Countersig not after: {0} UTC'.format(
-                         time.asctime(time.gmtime(auth.counter_chain_head[1]))))
+                    time.asctime(time.gmtime(auth.counter_chain_head[1]))))
 
             self.log('info', bold('Certificates:'))
             for (issuer, serial), cert in auth.certificates.items():
@@ -731,13 +754,14 @@ class PE(Module):
                 not_before_time = not_before.ToPythonEpochTime()
                 not_after_time = not_after.ToPythonEpochTime()
                 self.log('info', 'Not Before: {0} UTC ({1})'.format(
-                         time.asctime(time.gmtime(not_before_time)), not_before[0]))
+                    time.asctime(time.gmtime(not_before_time)), not_before[0]))
                 self.log('info', 'Not After: {0} UTC ({1})'.format(
-                         time.asctime(time.gmtime(not_after_time)), not_after[0]))
+                    time.asctime(time.gmtime(not_after_time)), not_after[0]))
 
             if auth.trailing_data:
-                self.log('info', 'Signature Blob had trailing (unvalidated) data ({0} bytes): {1}'.format(
-                         len(auth.trailing_data), auth.trailing_data.encode('hex')))
+                self.log(
+                    'info', 'Signature Blob had trailing (unvalidated) data ({0} bytes): {1}'.format(
+                        len(auth.trailing_data), auth.trailing_data.encode('hex')))
 
     def language(self):
 
@@ -844,11 +868,7 @@ class PE(Module):
         if is_packed(self.pe):
             self.log('warning', "Probably packed, the language guess might be unreliable")
 
-        language = find_language(
-            get_iat(self.pe),
-            __sessions__.current.file,
-            __sessions__.current.file.data
-        )
+        language = find_language(get_iat(self.pe), __sessions__.current.file, __sessions__.current.file.data)
 
         if language:
             self.log('info', "Probable language: {0}".format(bold(language)))
@@ -881,11 +901,7 @@ class PE(Module):
                 if is_packed(cur_pe):
                     cur_packed = 'Yes'
 
-                cur_language = find_language(
-                    get_iat(cur_pe),
-                    sample,
-                    open(sample_path, 'rb').read()
-                )
+                cur_language = find_language(get_iat(cur_pe), sample, open(sample_path, 'rb').read())
 
                 if not cur_language:
                     continue
@@ -914,8 +930,8 @@ class PE(Module):
                 file_handle.seek(int(section.PointerToRawData))
                 section_data = file_handle.read(int(section.SizeOfRawData))
 
-                dump_path = os.path.join(self.args.dump, '{}_{}.bin'.format(
-                    __sessions__.current.file.md5, section_name))
+                dump_path = os.path.join(self.args.dump, '{}_{}.bin'.format(__sessions__.current.file.md5,
+                                                                            section_name))
 
                 with open(dump_path, 'wb') as dump_handle:
                     dump_handle.write(section_data)
@@ -924,15 +940,14 @@ class PE(Module):
             rows.append([
                 section_name,
                 hex(section.VirtualAddress),
-                hex(section.Misc_VirtualSize),
-                section.PointerToRawData,
-                section.SizeOfRawData,
+                hex(section.Misc_VirtualSize), section.PointerToRawData, section.SizeOfRawData,
                 section.get_entropy()
             ])
 
         self.result_sections = rows
         self.log('info', "PE Sections:")
-        self.log('table', dict(header=['Name', 'RVA', 'VirtualSize', 'PointerToRawData', 'RawDataSize', 'Entropy'], rows=rows))
+        self.log('table',
+                 dict(header=['Name', 'RVA', 'VirtualSize', 'PointerToRawData', 'RawDataSize', 'Entropy'], rows=rows))
 
     def pehash(self):
         if not HAVE_PEHASH:

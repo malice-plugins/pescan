@@ -16,11 +16,10 @@ import os
 import click
 import requests
 from flask import Flask, abort, jsonify, redirect, request
+from malice import MalPEFile
 from werkzeug.utils import secure_filename
 
 from elastic import Elastic
-from pehash import pehasher
-# from pdfparser.malice_pdfparser import MalPdfParser
 from utils import json2markdown, sha256_checksum
 
 log = logging.getLogger(__name__)
@@ -34,10 +33,10 @@ def init_logging(verbose):
     # add ch to logger
     log.addHandler(ch)
 
-    # pdfparser_logger = logging.getLogger('pdfparser.malice_pdfparser')
-    # pdfparser_logger.propagate = False
-    # pdfparser_logger.setLevel(verbose)
-    # pdfparser_logger.addHandler(ch)
+    malpefile = logging.getLogger('malice')
+    malpefile.propagate = False
+    malpefile.setLevel(verbose)
+    malpefile.addHandler(ch)
 
     # get elasticsearch logger
     es_logger = logging.getLogger('elasticsearch')
@@ -103,7 +102,7 @@ def scan(file_path, verbose, table, proxy, callback, eshost, timeout, extract):
         init_logging(verbose)
 
         # TODO: check if EXE is too big (max size 3000000 ??)
-        pe_results = {'pehash': pehasher.calculate_pehash(file_path)}
+        pe_results = MalPEFile(file_path).run()
 
         malice_scan = {
             'id': os.environ.get('MALICE_SCANID', sha256_checksum(file_path)),
