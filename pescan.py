@@ -16,10 +16,10 @@ import os
 import click
 import requests
 from flask import Flask, abort, jsonify, redirect, request
-from malice import MalPEFile
 from werkzeug.utils import secure_filename
 
 from elastic import Elastic
+from malice import MalPEFile
 from utils import json2markdown, sha256_checksum
 
 log = logging.getLogger(__name__)
@@ -123,6 +123,7 @@ def scan(file_path, verbose, table, proxy, callback, eshost, timeout, extract):
         if table:
             print(malice_scan['results']['markdown'])
         else:
+            pe_results.pop('markdown')
             print(json.dumps(pe_results, indent=True))
 
         # POST dropped files as a JSON blob back to malice server/daemon
