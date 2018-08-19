@@ -53,9 +53,5 @@ jobs:
           name: Run tests
           command: |
             set -x
-            docker run --rm --volumes-from malvol app -V sample | jq .
-            docker run --rm --volumes-from malvol app -t sample
-      - run:
-          name: Run elasticsearch tests
-          command: |
-            docker-compose -f ./docker-compose.ci.yml up            
+            docker run --rm --volumes-from malvol app scan -vvvvv sample | jq .
+            # docker run --rm --volumes-from malvol app scan -t sample
