@@ -54,9 +54,9 @@ Options:
   -x, --proxy PROXY        proxy settings for Malice webhook endpoint [$MALICE_PROXY]
   -c, --callback ENDPOINT  POST results back to Malice webhook [$MALICE_ENDPOINT]
   --elasticsearch HOST     elasticsearch address for Malice to store results [$MALICE_ELASTICSEARCH]
-  --timeout SECS           malice plugin timeout
-                           (default: 10) [$MALICE_TIMEOUT]
-  --extract PATH           where to extract the embedded objects to (default: /malware) [$MALICE_EXTRACT_PATH]
+  --timeout SECS           malice plugin timeout (default: 10) [$MALICE_TIMEOUT]
+  --extract PATH           where to extract the embedded objects to
+                           (default: /malware) [$MALICE_EXTRACT_PATH]
   --peid PATH              path to the PEiD database file (default: peid/UserDB.TXT) [$MALICE_PEID_PATH]
   -h, --help               Show this message and exit.
 ```
