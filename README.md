@@ -69,7 +69,157 @@ This will output to stdout and POST to malice results API webhook endpoint.
 
 ```json
 {
-  "exe": {}
+  "linker_version": "06.00",
+  "compiletime": {
+    "unix": 1164878434,
+    "datetime": "2006-11-30 09:20:34"
+  },
+  "imports": [
+    {
+      "name": "GetStartupInfoA",
+      "address": "0x406044"
+    },
+    {
+      "name": "GetModuleHandleA",
+      "address": "0x406048"
+    },
+    {
+      "name": "CreatePipe",
+      "address": "0x40604c"
+    },
+    {
+      "name": "PeekNamedPipe",
+      "address": "0x406050"
+    },
+    {
+      "name": "ReadFile",
+      "address": "0x406054"
+    },
+    {
+      "name": "CreateProcessA",
+      "address": "0x406058"
+    },
+    ...SNIP...
+    {
+      "name": "WSACleanup",
+      "address": "0x406210"
+    },
+    {
+      "name": "ioctlsocket",
+      "address": "0x406214"
+    }
+  ],
+  "resource_versioninfo": {
+    "legalcopyright": "(C) Microsoft Corporation. All rights reserved.",
+    "internalname": "iexplore",
+    "fileversion": "6.00.2900.2180 (xpsp_sp2_rtm.040803-2158)",
+    "companyname": "Microsoft Corporation",
+    "productname": "Microsoft(R) Windows(R) Operating System",
+    "productversion": "6.00.2900.2180",
+    "original_filename": "IEXPLORE.EXE",
+    "file_description": "Internet Explorer"
+  },
+  "rich_header_info": [
+    {
+      "tool_id": 12,
+      "version": 7291,
+      "times used": 1
+    },
+    ...SNIP...
+    {
+      "tool_id": 6,
+      "version": 1720,
+      "times used": 1
+    }
+  ],
+  "os_version": "04.00",
+  "is_packed": false,
+  "entrypoint": "0x5a46",
+  "sections": [
+    {
+      "raw_data_size": 20480,
+      "name": ".text",
+      "rva": "0x1000",
+      "pointer_to_raw_data": 4096,
+      "entropy": 5.988944574755928,
+      "virtual_size": "0x4bfe"
+    },
+    {
+      "raw_data_size": 4096,
+      "name": ".rdata",
+      "rva": "0x6000",
+      "pointer_to_raw_data": 24576,
+      "entropy": 3.291179369026711,
+      "virtual_size": "0xc44"
+    },
+    {
+      "raw_data_size": 4096,
+      "name": ".data",
+      "rva": "0x7000",
+      "pointer_to_raw_data": 28672,
+      "entropy": 4.04448531075933,
+      "virtual_size": "0x17b0"
+    },
+    {
+      "raw_data_size": 8192,
+      "name": ".rsrc",
+      "rva": "0x9000",
+      "pointer_to_raw_data": 32768,
+      "entropy": 4.49716326553469,
+      "virtual_size": "0x15d0"
+    }
+  ],
+  "resources": [
+    {
+      "language_desc": "Chinese-People's Republic of China",
+      "sublanguage": "SUBLANG_CHINESE_SIMPLIFIED",
+      "name": "RT_ICON",
+      "language": "LANG_CHINESE",
+      "offset": "0x90f0",
+      "size": "0x10a8",
+      "type": "data",
+      "id": 1,
+      "md5": "14bf7c82dcfb7e41243f5b87d0c79538"
+    },
+    {
+      "language_desc": "Chinese-People's Republic of China",
+      "sublanguage": "SUBLANG_CHINESE_SIMPLIFIED",
+      "name": "RT_GROUP_ICON",
+      "language": "LANG_CHINESE",
+      "offset": "0xa198",
+      "size": "0x14",
+      "type": "data",
+      "id": 2,
+      "md5": "3c68f77c35c26ff079a1c410ee44fa62"
+    },
+    {
+      "language_desc": "Chinese-People's Republic of China",
+      "sublanguage": "SUBLANG_CHINESE_SIMPLIFIED",
+      "name": "RT_VERSION",
+      "language": "LANG_CHINESE",
+      "offset": "0xa1b0",
+      "size": "0x41c",
+      "type": "data",
+      "id": 3,
+      "md5": "9a12ece86a71c3499df0fb0ebe6ea33e"
+    }
+  ],
+  "peid": [
+    "Armadillo v1.71",
+    "Microsoft Visual C++ v5.0/v6.0 (MFC)",
+    "Microsoft Visual C++"
+  ],
+  "calculated_file_size": 42448,
+  "imphash": "a2cee99c7e42d671d47e3fb71c71bda4",
+  "number_of_sections": 4,
+  "pehash": "884bf0684addc269d641efb74e0fcb88267211da",
+  "machine_type": "0x14c (IMAGE_FILE_MACHINE_I386)",
+  "image_base": 4194304,
+  "language": "C",
+  "size_of_image": 45056,
+  "signature": {
+    "heuristic": "No file signature data found"
+  }
 }
 ```
 

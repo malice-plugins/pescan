@@ -1,11 +1,10 @@
-To write results to [ElasticSearch](https://www.elastic.co/products/elasticsearch)
-==================================================================================
+# To write results to [ElasticSearch](https://www.elastic.co/products/elasticsearch)
 
 ```bash
 $ docker volume create --name malice
-$ docker run -d --name elastic \
+$ docker run -d --name elasticsearch \
                 -p 9200:9200 \
                 -v malice:/usr/share/elasticsearch/data \
                  malice/elasticsearch:6.3
-$ docker run --rm -v /path/to/malware:/malware:ro --link elastic malice/exe -t PEFILE
+$ docker run --rm -v /path/to/malware:/malware:ro --link elasticsearch malice/exe -t PEFILE
 ```
