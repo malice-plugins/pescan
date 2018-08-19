@@ -15,6 +15,7 @@ import tempfile
 import time
 from os import path
 
+import chardet
 from future.builtins import open
 
 import pefile
@@ -290,6 +291,225 @@ class MalPEFile(object):
             else:
                 self.results['resource_versioninfo'] = pe_resource_verinfo_res_list[0]
 
+    def resource_strings(self):
+        BYTE = 1
+        WORD = 2
+        DWORD = 4
+
+        DS_SETFONT = 0x40
+
+        DIALOG_LEAD = DWORD + DWORD + WORD + WORD + WORD + WORD + WORD
+        DIALOG_ITEM_LEAD = DWORD + DWORD + WORD + WORD + WORD + WORD + WORD
+
+        DIALOGEX_LEAD = WORD + WORD + DWORD + DWORD + DWORD + WORD + WORD + WORD + WORD + WORD
+        DIALOGEX_TRAIL = WORD + WORD + BYTE + BYTE
+        DIALOGEX_ITEM_LEAD = DWORD + DWORD + DWORD + WORD + WORD + WORD + WORD + DWORD
+        DIALOGEX_ITEM_TRAIL = WORD
+
+        ITEM_TYPES = {
+            0x80: "BUTTON",
+            0x81: "EDIT",
+            0x82: "STATIC",
+            0x83: "LIST BOX",
+            0x84: "SCROLL BAR",
+            0x85: "COMBO BOX"
+        }
+
+        if hasattr(self.pe, 'DIRECTORY_ENTRY_RESOURCE'):
+            tags = []
+            for dir_type in self.pe.DIRECTORY_ENTRY_RESOURCE.entries:
+                if dir_type.name is None:
+                    if dir_type.id in pefile.RESOURCE_TYPE:
+                        dir_type.name = pefile.RESOURCE_TYPE[dir_type.id]
+                for nameID in dir_type.directory.entries:
+                    if nameID.name is None:
+                        nameID.name = hex(nameID.id)
+                    for language in nameID.directory.entries:
+                        strings = []
+                        if str(dir_type.name) == "RT_DIALOG":
+                            data_rva = language.data.struct.OffsetToData
+                            size = language.data.struct.Size
+                            data = self.pe.get_memory_mapped_image()[data_rva:data_rva + size]
+
+                            offset = 0
+                            if self.pe.get_word_at_rva(data_rva + offset) == 0x1 \
+                                    and self.pe.get_word_at_rva(data_rva + offset + WORD) == 0xFFFF:
+                                # Use Extended Dialog Parsing
+
+                                # Remove leading bytes
+                                offset += DIALOGEX_LEAD
+                                if data[offset:offset + 2] == "\xFF\xFF":
+                                    offset += DWORD
+                                else:
+                                    offset += WORD
+                                if data[offset:offset + 2] == "\xFF\xFF":
+                                    offset += DWORD
+                                else:
+                                    offset += WORD
+
+                                # Get window title
+                                window_title = self.pe.get_string_u_at_rva(data_rva + offset)
+                                if len(window_title) != 0:
+                                    strings.append(("DIALOG_TITLE", window_title))
+                                offset += len(window_title) * 2 + WORD
+
+                                # Remove trailing bytes
+                                offset += DIALOGEX_TRAIL
+                                offset += len(self.pe.get_string_u_at_rva(data_rva + offset)) * 2 + WORD
+
+                                # alignment adjustment
+                                if (offset % 4) != 0:
+                                    offset += WORD
+
+                                while True:
+
+                                    if offset >= size:
+                                        break
+
+                                    offset += DIALOGEX_ITEM_LEAD
+
+                                    # Get item type
+                                    if self.pe.get_word_at_rva(data_rva + offset) == 0xFFFF:
+                                        offset += WORD
+                                        item_type = ITEM_TYPES[self.pe.get_word_at_rva(data_rva + offset)]
+                                        offset += WORD
+                                    else:
+                                        item_type = self.pe.get_string_u_at_rva(data_rva + offset)
+                                        offset += len(item_type) * 2 + WORD
+
+                                    # Get item text
+                                    item_text = self.pe.get_string_u_at_rva(data_rva + offset)
+                                    if len(item_text) != 0:
+                                        strings.append((item_type, item_text))
+                                    offset += len(item_text) * 2 + WORD
+
+                                    extra_bytes = self.pe.get_word_at_rva(data_rva + offset)
+                                    offset += extra_bytes + DIALOGEX_ITEM_TRAIL
+
+                                    # Alignment adjustment
+                                    if (offset % 4) != 0:
+                                        offset += WORD
+
+                            else:
+                                # TODO: Use Non extended Dialog Parsing
+                                # Remove leading bytes
+                                style = self.pe.get_word_at_rva(data_rva + offset)
+
+                                offset += DIALOG_LEAD
+                                if data[offset:offset + 2] == "\xFF\xFF":
+                                    offset += DWORD
+                                else:
+                                    offset += len(self.pe.get_string_u_at_rva(data_rva + offset)) * 2 + WORD
+                                if data[offset:offset + 2] == "\xFF\xFF":
+                                    offset += DWORD
+                                else:
+                                    offset += len(self.pe.get_string_u_at_rva(data_rva + offset)) * 2 + WORD
+
+                                # Get window title
+                                window_title = self.pe.get_string_u_at_rva(data_rva + offset)
+                                if len(window_title) != 0:
+                                    strings.append(("DIALOG_TITLE", window_title))
+                                offset += len(window_title) * 2 + WORD
+
+                                if (style & DS_SETFONT) != 0:
+                                    offset += WORD
+                                    offset += len(self.pe.get_string_u_at_rva(data_rva + offset)) * 2 + WORD
+
+                                # Alignment adjustment
+                                if (offset % 4) != 0:
+                                    offset += WORD
+
+                                while True:
+
+                                    if offset >= size:
+                                        break
+
+                                    offset += DIALOG_ITEM_LEAD
+
+                                    # Get item type
+                                    if self.pe.get_word_at_rva(data_rva + offset) == 0xFFFF:
+                                        offset += WORD
+                                        item_type = ITEM_TYPES[self.pe.get_word_at_rva(data_rva + offset)]
+                                        offset += WORD
+                                    else:
+                                        item_type = self.pe.get_string_u_at_rva(data_rva + offset)
+                                        offset += len(item_type) * 2 + WORD
+
+                                    # Get item text
+                                    if self.pe.get_word_at_rva(data_rva + offset) == 0xFFFF:
+                                        offset += DWORD
+                                    else:
+                                        item_text = self.pe.get_string_u_at_rva(data_rva + offset)
+                                        if len(item_text) != 0:
+                                            strings.append((item_type, item_text))
+                                        offset += len(item_text) * 2 + WORD
+
+                                    extra_bytes = self.pe.get_word_at_rva(data_rva + offset)
+                                    offset += extra_bytes + WORD
+
+                                    # Alignment adjustment
+                                    if (offset % 4) != 0:
+                                        offset += WORD
+
+                        elif str(dir_type.name) == "RT_STRING":
+                            data_rva = language.data.struct.OffsetToData
+                            size = language.data.struct.Size
+                            data = self.pe.get_memory_mapped_image()[data_rva:data_rva + size]
+                            offset = 0
+                            while True:
+                                if offset >= size:
+                                    break
+
+                                ustr_length = self.pe.get_word_from_data(data[offset:offset + 2], 0)
+                                offset += 2
+
+                                if ustr_length == 0:
+                                    continue
+
+                                ustr = self.pe.get_string_u_at_rva(data_rva + offset, max_length=ustr_length)
+                                offset += ustr_length * 2
+                                strings.append((None, ustr))
+
+                        if len(strings) > 0:
+                            success = False
+                            try:
+                                comment = "%s (id:%s - lang_id:0x%04X [%s])" % (str(dir_type.name), str(nameID.name),
+                                                                                language.id, lcid[language.id])
+                            except KeyError:
+                                comment = "%s (id:%s - lang_id:0x%04X [Unknown language])" % (str(
+                                    dir_type.name), str(nameID.name), language.id)
+                            print("PE: STRINGS - %s" % comment)
+                            for idx in range(len(strings)):
+                                # noinspection PyBroadException
+                                try:
+                                    tag_value = strings[idx][1]
+
+                                    # The following line crash chardet if a
+                                    # UPX packed file as packed the resources...
+                                    chardet.detect(tag_value)  # TODO: Find a better way to do this
+
+                                    tag_value = tag_value.replace('\r', ' ').replace('\n', ' ')
+                                    if strings[idx][0] is not None:
+                                        print("{}: FILE_STRING".format(strings[idx][0]))
+                                        tags.append(strings[idx][0])
+                                        # res.add_line(
+                                        #     [strings[idx][0], ": ",
+                                        #      res_txt_tag(tag_value, TAG_TYPE['FILE_STRING'])])
+                                    else:
+                                        print("{}: FILE_STRING".format(tag_value))
+                                        tags.append(tag_value)
+                                        # res.add_line(res_txt_tag(tag_value, TAG_TYPE['FILE_STRING']))
+
+                                    success = True
+                                except:
+                                    pass
+                            if success:
+                                print("SUCCESS")
+                                self.results['resource_strings'] = tags
+                                # self.file_res.add_section(res)
+            else:
+                pass
+
     def slack_space(self):
         if self.results['calculated_file_size'] > 0 and (len(self.pe.__data__) > self.results['calculated_file_size']):
             slack_size = len(self.pe.__data__) - self.results['calculated_file_size']
@@ -560,6 +780,7 @@ class MalPEFile(object):
             self.exports()
             self.resources()
             self.resource_versioninfo()
+            self.resource_strings()
             self.imphash()
             self.compiletime()
             self.peid()
