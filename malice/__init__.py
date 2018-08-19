@@ -15,10 +15,10 @@ import tempfile
 import time
 from os import path
 
-import pefile
-import peutils
 from future.builtins import open
 
+import pefile
+import peutils
 from lcid import LCID
 from pehash.pehasher import calculate_pehash
 from sig import get_signify
@@ -258,34 +258,37 @@ class MalPEFile(object):
 
     def resource_versioninfo(self):
         if hasattr(self.pe, 'FileInfo'):
-            pe_resource_verinfo_res = {}
-            if len(self.pe.FileInfo) > 2:
-                pass
+            pe_resource_verinfo_res_list = []
             for file_info in self.pe.FileInfo:
-                if file_info.name == "StringFileInfo":
-                    if len(file_info.StringTable) > 0:
-                        lang_id = "0"
-                        try:
-                            if "LangID" in file_info.StringTable[0].entries:
-                                lang_id = file_info.StringTable[0].get("LangID")
-                                if not int(lang_id, 16) >> 16 == 0:
-                                    pe_resource_verinfo_res['lang_id'] = '{} ()'.format(
-                                        lang_id, LCID[int(lang_id, 16) >> 16])
+                for info in file_info:
+                    pe_resource_verinfo_res = {}
+                    if info.name == "StringFileInfo":
+                        if len(info.StringTable) > 0:
+                            lang_id = "0"
+                            try:
+                                if "LangID" in info.StringTable[0].entries:
+                                    lang_id = info.StringTable[0].get("LangID")
+                                    if not int(lang_id, 16) >> 16 == 0:
+                                        pe_resource_verinfo_res['lang_id'] = '{} ({})'.format(
+                                            lang_id, LCID[int(lang_id, 16) >> 16])
+                                    else:
+                                        pe_resource_verinfo_res['lang_id'] = "{} (NEUTRAL)".format(lang_id)
+                            except (ValueError, KeyError):
+                                pe_resource_verinfo_res['lang_id'] = '{} is invalid'.format(lang_id)
+
+                            for entry in info.StringTable[0].entries.items():
+                                if entry[0] == 'OriginalFilename':
+                                    pe_resource_verinfo_res['original_filename'] = entry[1]
+                                elif entry[0] == 'FileDescription':
+                                    pe_resource_verinfo_res['file_description'] = entry[1]
                                 else:
-                                    pe_resource_verinfo_res['lang_id'] = "{} (NEUTRAL)".format(lang_id)
-                        except (ValueError, KeyError):
-                            pe_resource_verinfo_res['lang_id'] = '{} is invalid'.format(lang_id)
-
-                        for entry in file_info.StringTable[0].entries.items():
-                            if entry[0] == 'OriginalFilename':
-                                pe_resource_verinfo_res['original_filename'] = entry[1]
-                            elif entry[0] == 'FileDescription':
-                                pe_resource_verinfo_res['file_description'] = entry[1]
-                            else:
-                                if len(entry[1]) > 0:
-                                    pe_resource_verinfo_res[entry[0].lower()] = entry[1]
-
-            self.results['resource_versioninfo'] = pe_resource_verinfo_res
+                                    if len(entry[1]) > 0:
+                                        pe_resource_verinfo_res[entry[0].lower()] = entry[1]
+                        pe_resource_verinfo_res_list.append(pe_resource_verinfo_res)
+            if len(pe_resource_verinfo_res_list) > 1:
+                self.results['resource_versioninfo'] = pe_resource_verinfo_res_list
+            else:
+                self.results['resource_versioninfo'] = pe_resource_verinfo_res_list[0]
 
     def slack_space(self):
         if self.results['calculated_file_size'] > 0 and (len(self.pe.__data__) > self.results['calculated_file_size']):

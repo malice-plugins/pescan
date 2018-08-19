@@ -1,5 +1,5 @@
 {
-  "took": 51,
+  "took": 3,
   "timed_out": false,
   "_shards": {
     "total": 5,
@@ -17,7 +17,7 @@
         "_id": "befb88b89c2eb401900a68e9f5b78764203f2b48264fcc3f7121bf04a57fd408",
         "_score": 1,
         "_source": {
-          "scan_date": "2018-08-19T15:33:30.599169",
+          "scan_date": "2018-08-19T15:43:42.262426",
           "plugins": {
             "document": {
               "exe": {

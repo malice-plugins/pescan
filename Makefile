@@ -3,8 +3,8 @@ ORG=malice
 NAME=exe
 CATEGORY=document
 VERSION=$(shell cat VERSION)
-MALWARE=tests/malware
-EXTRACT=/malware/tests/dump
+MALWARE?=tests/malware
+EXTRACT?=/malware/tests/dump
 MALICE_SCANID?=
 
 all: build size tag test test_markdown
@@ -27,7 +27,7 @@ tags:
 
 .PHONY: ssh
 ssh:
-	@docker run --init -it --rm --entrypoint=bash $(ORG)/$(NAME):$(VERSION)
+	@docker run --init -it --rm -v $(PWD):/malware --entrypoint=bash $(ORG)/$(NAME):$(VERSION)
 
 .PHONY: tar
 tar:
@@ -87,13 +87,6 @@ test_web:
 .PHONY: run
 run: stop ## Run docker container
 	@docker run --init -d --name $(NAME) -p 9200:9200 $(ORG)/$(NAME):$(VERSION)
-
-.PHONY: ssh
-ssh: ## SSH into docker image
-	@echo "===> Starting elasticsearch"
-	@docker rm -f elasticsearch || true
-	@docker run --init -d --name elasticsearch -p 9200:9200 blacktop/elasticsearch
-	@docker run -it --rm --link elasticsearch -v $(PWD):/malware --entrypoint=sh $(ORG)/$(NAME):$(VERSION)
 
 .PHONY: stop
 stop: ## Kill running docker containers

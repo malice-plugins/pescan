@@ -27,6 +27,7 @@ RUN apk --update add --no-cache -t .build-deps \
   && pip install --upgrade pip wheel \
   && echo "\t[*] install requirements..." \
   && pip install -U -r requirements.txt \
+  && pip list \
   && echo "\t[*] install pescan.py..." \
   && chmod +x pescan.py \
   && ln -s /usr/sbin/pescan.py /usr/sbin/pescan \
