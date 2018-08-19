@@ -93,12 +93,12 @@ def exe():
 @click.option(
     '--extract',
     default=lambda: os.environ.get('MALICE_EXTRACT_PATH', '/malware'),
-    help='where to extract the embedded objects to',
+    help='where to extract the embedded objects to (default: /malware) [$MALICE_EXTRACT_PATH]',
     metavar='PATH')
 @click.option(
     '--peid',
     default=lambda: os.environ.get('MALICE_PEID_PATH', os.path.join(path[0], 'peid/UserDB.TXT')),
-    help='path to the PEiD database file',
+    help='path to the PEiD database file (default: peid/UserDB.TXT) [$MALICE_PEID_PATH]',
     metavar='PATH')
 def scan(file_path, verbose, table, proxy, callback, eshost, timeout, extract, peid):
     """Malice EXE Plugin."""

@@ -19,12 +19,43 @@ Malice PExecutable Plugin
 
 ## Usage
 
+```bash
+$ docker run --rm -v /path/to/malware:/malware malice/exe --help
+
+Usage: pescan [OPTIONS] COMMAND [ARGS]...
+
+  Malice PExecutable Plugin
+
+  Author: blacktop <https://github.com/blacktop>
+
+Options:
+  --version   print the version
+  -h, --help  Show this message and exit.
+
+Commands:
+  scan  scan a file
+  web   start web service
 ```
-docker run --rm -v /path/to/malware:/malware malice/exe EXE
-```
+
+### Scanning
 
 ```bash
+$ docker run --rm -v /path/to/malware:/malware malice/exe scan --help
 
+Usage: pescan.py scan [OPTIONS] FILE_PATH
+
+  Malice EXE Plugin.
+
+Options:
+  -v, --verbose            verbose output
+  -t, --table              output as Markdown table
+  -x, --proxy PROXY        proxy settings for Malice webhook endpoint [$MALICE_PROXY]
+  -c, --callback ENDPOINT  POST results back to Malice webhook [$MALICE_ENDPOINT]
+  --elasticsearch HOST     elasticsearch address for Malice to store results [$MALICE_ELASTICSEARCH]
+  --timeout SECS           malice plugin timeout (default: 10) [$MALICE_TIMEOUT]
+  --extract PATH           where to extract the embedded objects to (default: /malware) [$MALICE_EXTRACT_PATH]
+  --peid PATH              path to the PEiD database file (default: peid/UserDB.TXT) [$MALICE_PEID_PATH]
+  -h, --help               Show this message and exit.
 ```
 
 This will output to stdout and POST to malice results API webhook endpoint.
