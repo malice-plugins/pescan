@@ -532,11 +532,6 @@
     "original_filename": "IEXPLORE.EXE",
     "file_description": "Internet Explorer"
   },
-  "signatures": [
-    "Armadillo v1.71",
-    "Microsoft Visual C++ v5.0/v6.0 (MFC)",
-    "Microsoft Visual C++"
-  ],
   "rich_header_info": [
     {
       "tool_id": 12,
@@ -655,6 +650,11 @@
       "id": 3,
       "md5": "9a12ece86a71c3499df0fb0ebe6ea33e"
     }
+  ],
+  "peid": [
+    "Armadillo v1.71",
+    "Microsoft Visual C++ v5.0/v6.0 (MFC)",
+    "Microsoft Visual C++"
   ],
   "calculated_file_size": 42448,
   "imphash": "a2cee99c7e42d671d47e3fb71c71bda4",

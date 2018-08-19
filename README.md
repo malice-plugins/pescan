@@ -73,7 +73,8 @@ Heavily (if not entirely) influenced by the [viper PE module](https://github.com
 
 ## TODO
 
-- [ ] add other's LICENSEs
+- [ ] add timeout protection
+- [ ] revisit security/signature stuff
 
 ## License
 
