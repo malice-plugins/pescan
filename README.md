@@ -107,8 +107,10 @@ Heavily (if not entirely) influenced by the [viper PE module](https://github.com
 
 ## TODO
 
+- [ ] activate dumping functionality
 - [ ] add timeout protection
 - [ ] revisit security/signature stuff
+- [ ] add proxy settings for callback POST
 
 ## License
 
