@@ -506,9 +506,6 @@ class MalPEFile(object):
                             if success:
                                 print("SUCCESS")
                                 self.results['resource_strings'] = tags
-                                # self.file_res.add_section(res)
-            else:
-                pass
 
     def slack_space(self):
         if self.results['calculated_file_size'] > 0 and (len(self.pe.__data__) > self.results['calculated_file_size']):

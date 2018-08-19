@@ -1,6 +1,6 @@
 # exe
 
-[![Circle CI](https://circleci.com/gh/malice-plugins/exe.png?style=shield)](https://circleci.com/gh/malice-plugins/exe) [![License](http://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org) [![Docker Stars](https://img.shields.io/docker/stars/malice/exe.svg)](https://hub.docker.com/r/malice/exe/) [![Docker Pulls](https://img.shields.io/docker/pulls/malice/exe.svg)](https://hub.docker.com/r/malice/exe/) [![Docker Image](https://img.shields.io/badge/docker%20image-81.4MB-blue.svg)](https://hub.docker.com/r/malice/exe/)
+[![Circle CI](https://circleci.com/gh/malice-plugins/exe.png?style=shield)](https://circleci.com/gh/malice-plugins/exe) [![License](http://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org) [![Docker Stars](https://img.shields.io/docker/stars/malice/exe.svg)](https://hub.docker.com/r/malice/exe/) [![Docker Pulls](https://img.shields.io/docker/pulls/malice/exe.svg)](https://hub.docker.com/r/malice/exe/) [![Docker Image](https://img.shields.io/badge/docker%20image-81.5MB-blue.svg)](https://hub.docker.com/r/malice/exe/)
 
 Malice PExecutable Plugin
 
