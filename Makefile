@@ -27,7 +27,7 @@ tags:
 
 .PHONY: ssh
 ssh:
-	@docker run --init -it --rm -v $(PWD):/malware --entrypoint=bash $(ORG)/$(NAME):$(VERSION)
+	@docker run --init -it --rm -v $(PWD):/malware --entrypoint=sh $(ORG)/$(NAME):$(VERSION)
 
 .PHONY: tar
 tar:

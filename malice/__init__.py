@@ -34,8 +34,9 @@ log = logging.getLogger(__name__)
 
 class MalPEFile(object):
 
-    def __init__(self, file_path, dump_path=None):
+    def __init__(self, file_path, peid_db_path, dump_path=None):
         self.file = file_path
+        self.peid_db = peid_db_path
         self.data = open(file_path, 'rb').read()
         self.dump = dump_path
         self.sha256 = sha256_checksum(self.file)
@@ -149,11 +150,11 @@ class MalPEFile(object):
 
     def peid(self):
 
-        self.results['signatures'] = []
+        self.results['peid'] = []
 
         def get_signatures():
 
-            with open('peid/UserDB.TXT', 'rt', encoding='ISO-8859-1') as f:
+            with open(self.peid_db, 'rt', encoding='ISO-8859-1') as f:
                 sig_data = f.read()
 
             return peutils.SignatureDatabase(data=sig_data)
@@ -167,11 +168,11 @@ class MalPEFile(object):
         if peid_matches:
             for sig in peid_matches:
                 if type(sig) is list:
-                    self.results['signatures'].append(sig[0])
+                    self.results['peid'].append(sig[0])
                 else:
-                    self.results['signatures'].append(sig)
+                    self.results['peid'].append(sig)
         else:
-            self.results['signatures'].append("No PEiD signatures matched.")
+            self.results['peid'].append("No PEiD signatures matched.")
 
     def resources(self):
         self.results['resources'] = []

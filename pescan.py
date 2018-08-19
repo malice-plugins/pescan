@@ -12,6 +12,7 @@ __date__ = '2018/08/01'
 import json
 import logging
 import os
+from sys import path
 
 import click
 import requests
@@ -94,7 +95,12 @@ def exe():
     default=lambda: os.environ.get('MALICE_EXTRACT_PATH', '/malware'),
     help='where to extract the embedded objects to',
     metavar='PATH')
-def scan(file_path, verbose, table, proxy, callback, eshost, timeout, extract):
+@click.option(
+    '--peid',
+    default=lambda: os.environ.get('MALICE_PEID_PATH', os.path.join(path[0], 'peid/UserDB.TXT')),
+    help='path to the PEiD database file',
+    metavar='PATH')
+def scan(file_path, verbose, table, proxy, callback, eshost, timeout, extract, peid):
     """Malice EXE Plugin."""
 
     try:
@@ -102,7 +108,7 @@ def scan(file_path, verbose, table, proxy, callback, eshost, timeout, extract):
         init_logging(verbose)
 
         # TODO: check if EXE is too big (max size 3000000 ??)
-        pe_results = MalPEFile(file_path).run()
+        pe_results = MalPEFile(file_path, peid_db_path=peid).run()
 
         malice_scan = {
             'id': os.environ.get('MALICE_SCANID', sha256_checksum(file_path)),
