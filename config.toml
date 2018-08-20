@@ -1,7 +1,7 @@
-# malice/exe plugin configuration.
+# malice/pescan plugin configuration.
 
-name = 'exe'
-description = 'EXE - tool to triage portable executables'
+name = 'pescan'
+description = 'pescan - tool to triage portable executables'
 category = 'exe'
 version = '0.1.0'
 

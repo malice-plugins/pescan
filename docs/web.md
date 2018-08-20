@@ -1,7 +1,7 @@
 # Create a PEscan micro-service
 
 ```bash
-$ docker run -d -p 3993:3993 malice/exe web
+$ docker run -d -p 3993:3993 malice/pescan web
 
  * Serving Flask app "pescan" (lazy loading)
  * Environment: production

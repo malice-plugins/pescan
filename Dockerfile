@@ -2,7 +2,7 @@ FROM malice/alpine
 
 LABEL maintainer "https://github.com/blacktop"
 
-LABEL malice.plugin.repository = "https://github.com/malice-plugins/exe.git"
+LABEL malice.plugin.repository = "https://github.com/malice-plugins/pescan.git"
 LABEL malice.plugin.category="exe"
 LABEL malice.plugin.mime="application/x-dosexec"
 LABEL malice.plugin.docker.engine="*"
@@ -20,7 +20,7 @@ RUN apk --update add --no-cache -t .build-deps \
   gcc \
   git \
   && set -ex \
-  && echo "===> Install malice/exe plugin..." \
+  && echo "===> Install malice/pescan plugin..." \
   && cd /usr/sbin \
   && export PIP_NO_CACHE_DIR=off \
   && export PIP_DISABLE_PIP_VERSION_CHECK=on \

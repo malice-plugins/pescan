@@ -1,6 +1,6 @@
-REPO=malice-plugins/exe
+REPO=malice-plugins/pescan
 ORG=malice
-NAME=exe
+NAME=pescan
 CATEGORY=exe
 VERSION=$(shell cat VERSION)
 MALWARE?=tests/malware

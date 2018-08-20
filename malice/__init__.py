@@ -2,7 +2,7 @@
 # This file is part of MaliceIO - https://github.com/malice-plugins/pdf
 # See the file 'LICENSE' for copying permission.
 
-__description__ = 'Malice EXE Plugin - pefile helper util'
+__description__ = 'Malice PExecutable Plugin - pefile helper util'
 __author__ = 'blacktop - <https://github.com/blacktop>'
 __version__ = '0.1.0'
 __date__ = '2018/08/18'
@@ -518,14 +518,14 @@ class MalPEFile(object):
                                 self.results['resource_strings'] = tags
 
     def slack_space(self):
-        if self.results['info']['calculated_file_size'] > 0 and (len(self.pe.__data__) > self.results['info']['calculated_file_size']):
+        if self.results['info']['calculated_file_size'] > 0 and (len(self.pe.__data__) >
+                                                                 self.results['info']['calculated_file_size']):
             slack_size = len(self.pe.__data__) - self.results['info']['calculated_file_size']
             if self.dump:
                 slack_path = path.join(self.dump, '{}_slack.bin'.format(self.sha256))
                 with open(slack_path, 'wb') as shandle:
-                    shandle.write(
-                        self.pe.__data__[self.results['info']['calculated_file_size']:self.results['info']['calculated_file_size'] +
-                                         slack_size])
+                    shandle.write(self.pe.__data__[self.results['info']['calculated_file_size']:
+                                                   self.results['info']['calculated_file_size'] + slack_size])
 
     def imphash(self):
         self.results['imphash'] = self.pe.get_imphash()

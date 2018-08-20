@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# This file is part of MaliceIO - https://github.com/malice-plugins/exe
+# This file is part of MaliceIO - https://github.com/malice-plugins/pescan
 # See the file 'LICENSE' for copying permission.
 
 __description__ = 'Malice PExecutable Plugin'
@@ -101,7 +101,7 @@ def exe():
     help='path to the PEiD database file (default: peid/UserDB.TXT) [$MALICE_PEID_PATH]',
     metavar='PATH')
 def scan(file_path, verbose, table, proxy, callback, eshost, timeout, extract, peid):
-    """Malice EXE Plugin."""
+    """Malice PExecutable Scanner"""
 
     try:
         # set up logging
@@ -112,7 +112,7 @@ def scan(file_path, verbose, table, proxy, callback, eshost, timeout, extract, p
 
         malice_scan = {
             'id': os.environ.get('MALICE_SCANID', sha256_checksum(file_path)),
-            'name': 'exe',
+            'name': 'pescan',
             'category': 'exe',
             'results': pe_results
         }
@@ -124,7 +124,7 @@ def scan(file_path, verbose, table, proxy, callback, eshost, timeout, extract, p
                 e = Elastic(eshost, timeout=timeout)
                 e.write(results=malice_scan)
             except Exception as e:
-                log.exception("failed to index malice/exe results into elasticsearch")
+                log.exception("failed to index malice/pescan results into elasticsearch")
 
         if table:
             print(malice_scan['results']['markdown'])
@@ -144,13 +144,13 @@ def scan(file_path, verbose, table, proxy, callback, eshost, timeout, extract, p
             requests.post(callback, json=malice_scan, proxies=proxies)
 
     except Exception as e:
-        log.exception("failed to run malice plugin: exe")
+        log.exception("failed to run malice plugin: pescan")
         return
 
 
 @exe.command('web', short_help='start web service')
 def web():
-    """Malice EXE Plugin Web Service"""
+    """Malice PExecutable Web Service"""
 
     # set up logging
     init_logging(logging.ERROR)
@@ -190,7 +190,7 @@ def web():
                     # pe_results['markdown'] = json2markdown(pe_results)
                     return jsonify(pe_results), 200
                 except Exception as e:
-                    log.exception("failed to run malice plugin: {}".format('exe'))
+                    log.exception("failed to run malice plugin: {}".format('pescan'))
                     return e, 500
                 finally:
                     try:

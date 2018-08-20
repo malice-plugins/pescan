@@ -6,5 +6,5 @@ $ docker run -d --name elasticsearch \
                 -p 9200:9200 \
                 -v malice:/usr/share/elasticsearch/data \
                  malice/elasticsearch:6.3
-$ docker run --rm -v /path/to/malware:/malware:ro --link elasticsearch malice/exe -t PEFILE
+$ docker run --rm -v /path/to/malware:/malware:ro --link elasticsearch malice/pescan -t PEFILE
 ```
