@@ -50,8 +50,12 @@ jobs:
             docker create -v /malware --name malvol alpine:3.8 /bin/true
             docker cp /tmp/sample malvol:/malware
       - run:
-          name: Run tests
+          name: Run tests (JSON output)
           command: |
             set -x
             docker run --rm --volumes-from malvol app scan -vvvvv sample | jq .
-            # docker run --rm --volumes-from malvol app scan -t sample
+      - run:
+          name: Run tests (Markdown output)
+          command: |
+            set -x
+            docker run --rm --volumes-from malvol app scan -t sample
