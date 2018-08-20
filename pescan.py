@@ -22,6 +22,7 @@ from werkzeug.utils import secure_filename
 from elastic import Elastic
 from malice import MalPEFile
 from utils import json2markdown, sha256_checksum
+from utils.constants import ROOT
 
 log = logging.getLogger(__name__)
 
@@ -97,7 +98,7 @@ def exe():
     metavar='PATH')
 @click.option(
     '--peid',
-    default=lambda: os.environ.get('MALICE_PEID_PATH', os.path.join(path[0], 'peid/UserDB.TXT')),
+    default=lambda: os.environ.get('MALICE_PEID_PATH', os.path.join(ROOT, 'peid/UserDB.TXT')),
     help='path to the PEiD database file (default: peid/UserDB.TXT) [$MALICE_PEID_PATH]',
     metavar='PATH')
 def scan(file_path, verbose, table, proxy, callback, eshost, timeout, extract, peid):
