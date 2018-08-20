@@ -2,7 +2,7 @@
 # This file is part of MaliceIO - https://github.com/malice-plugins/pdf
 # See the file 'LICENSE' for copying permission.
 
-__description__ = "Malice PDF Plugin Elasticsearch Interface"
+__description__ = "Malice PE-executable Plugin Elasticsearch Interface"
 __author__ = "blacktop - <https://github.com/blacktop>"
 
 import time
