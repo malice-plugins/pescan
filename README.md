@@ -1,4 +1,4 @@
-![pescan logo](https://github.com/malice-plugins/pescan/blob/master/docs/pescan.png)
+![pescan logo](https://github.com/malice-plugins/pescan/blob/master/docs/exe.png)
 
 # pescan
 
