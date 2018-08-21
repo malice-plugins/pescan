@@ -46,7 +46,7 @@ $ docker run --rm -v /path/to/malware:/malware malice/pescan scan --help
 
 Usage: pescan.py scan [OPTIONS] FILE_PATH
 
-  Malice PExecutable Plugin
+  Malice PExecutable Scanner
 
 Options:
   -v, --verbose            verbose output
@@ -55,9 +55,11 @@ Options:
   -c, --callback ENDPOINT  POST results back to Malice webhook [$MALICE_ENDPOINT]
   --elasticsearch HOST     elasticsearch address for Malice to store results [$MALICE_ELASTICSEARCH]
   --timeout SECS           malice plugin timeout (default: 10) [$MALICE_TIMEOUT]
-  --extract PATH           where to extract the embedded objects to
-                           (default: /malware) [$MALICE_EXTRACT_PATH]
-  --peid PATH              path to the PEiD database file (default: peid/UserDB.TXT) [$MALICE_PEID_PATH]
+  -d, --dump               dump possibly embedded binaries
+  --output PATH            where to extract the embedded objects to (default: /malware)
+                           [$MALICE_EXTRACT_PATH]
+  --peid PATH              path to the PEiD database file (default:peid/UserDB.TXT)
+                           [$MALICE_PEID_PATH]
   -h, --help               Show this message and exit.
 ```
 
@@ -348,7 +350,7 @@ Heavily (if not entirely) influenced by the [viper PE module](https://github.com
 
 ## TODO
 
-- [ ] activate dumping functionality
+- [x] activate dumping functionality
 - [ ] add timeout protection
 - [ ] revisit security/signature stuff
 - [ ] add proxy settings for callback POST

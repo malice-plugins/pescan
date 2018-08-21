@@ -35,11 +35,14 @@ log = logging.getLogger(__name__)
 
 class MalPEFile(object):
 
-    def __init__(self, file_path, peid_db_path, dump_path=None):
+    def __init__(self, file_path, peid_db_path, should_dump=False, dump_path=None):
         self.file = file_path
         self.peid_db = peid_db_path
         self.data = open(file_path, 'rb').read()
         self.dump = dump_path
+        if should_dump and not path.isdir(dump_path):
+            log.error("folder does not exist: {}".format(dump_path))
+            self.dump = None
         self.sha256 = sha256_checksum(self.file)
         self.pe = None
         self.results = {}
@@ -743,14 +746,14 @@ class MalPEFile(object):
             else:
                 section_name = safe_str(section.Name)
             section_name = section_name.replace('\x00', '')
-            if self.dump:
-                file_handle = BytesIO(self.data)
-                file_handle.seek(int(section.PointerToRawData))
-                section_data = file_handle.read(int(section.SizeOfRawData))
-
-                dump_path = path.join(self.dump, '{}_{}.bin'.format(self.sha256, section_name))
-                with open(dump_path, 'wb') as dump_handle:
-                    dump_handle.write(section_data)
+            # if self.dump:
+            #     file_handle = BytesIO(self.data)
+            #     file_handle.seek(int(section.PointerToRawData))
+            #     section_data = file_handle.read(int(section.SizeOfRawData))
+            #
+            #     dump_path = path.join(self.dump, '{}_{}.bin'.format(self.sha256, section_name))
+            #     with open(dump_path, 'wb') as dump_handle:
+            #         dump_handle.write(section_data)
 
             # calculated file size
             self.results['info']['calculated_file_size'] = int(section.VirtualAddress) + int(section.Misc_VirtualSize)

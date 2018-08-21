@@ -1,5 +1,5 @@
 {
-  "took": 97,
+  "took": 6,
   "timed_out": false,
   "_shards": {
     "total": 5,
@@ -17,7 +17,7 @@
         "_id": "befb88b89c2eb401900a68e9f5b78764203f2b48264fcc3f7121bf04a57fd408",
         "_score": 1,
         "_source": {
-          "scan_date": "2018-08-20T00:29:08.459769",
+          "scan_date": "2018-08-21T12:25:46.826287",
           "plugins": {
             "exe": {
               "pescan": {
@@ -47,540 +47,540 @@
                   {
                     "KERNEL32.DLL": [
                       {
-                        "name": "GetStartupInfoA",
-                        "address": "0x406044"
+                        "address": "0x406044",
+                        "name": "GetStartupInfoA"
                       },
                       {
-                        "name": "GetModuleHandleA",
-                        "address": "0x406048"
+                        "address": "0x406048",
+                        "name": "GetModuleHandleA"
                       },
                       {
-                        "name": "CreatePipe",
-                        "address": "0x40604c"
+                        "address": "0x40604c",
+                        "name": "CreatePipe"
                       },
                       {
-                        "name": "PeekNamedPipe",
-                        "address": "0x406050"
+                        "address": "0x406050",
+                        "name": "PeekNamedPipe"
                       },
                       {
-                        "name": "ReadFile",
-                        "address": "0x406054"
+                        "address": "0x406054",
+                        "name": "ReadFile"
                       },
                       {
-                        "name": "CreateProcessA",
-                        "address": "0x406058"
+                        "address": "0x406058",
+                        "name": "CreateProcessA"
                       },
                       {
-                        "name": "MultiByteToWideChar",
-                        "address": "0x40605c"
+                        "address": "0x40605c",
+                        "name": "MultiByteToWideChar"
                       },
                       {
-                        "name": "GlobalAlloc",
-                        "address": "0x406060"
+                        "address": "0x406060",
+                        "name": "GlobalAlloc"
                       },
                       {
-                        "name": "GlobalFree",
-                        "address": "0x406064"
+                        "address": "0x406064",
+                        "name": "GlobalFree"
                       },
                       {
-                        "name": "GetLocalTime",
-                        "address": "0x406068"
+                        "address": "0x406068",
+                        "name": "GetLocalTime"
                       },
                       {
-                        "name": "RemoveDirectoryA",
-                        "address": "0x40606c"
+                        "address": "0x40606c",
+                        "name": "RemoveDirectoryA"
                       },
                       {
-                        "name": "FindNextFileA",
-                        "address": "0x406070"
+                        "address": "0x406070",
+                        "name": "FindNextFileA"
                       },
                       {
-                        "name": "FindFirstFileA",
-                        "address": "0x406074"
+                        "address": "0x406074",
+                        "name": "FindFirstFileA"
                       },
                       {
-                        "name": "GetFileTime",
-                        "address": "0x406078"
+                        "address": "0x406078",
+                        "name": "GetFileTime"
                       },
                       {
-                        "name": "SetFileTime",
-                        "address": "0x40607c"
+                        "address": "0x40607c",
+                        "name": "SetFileTime"
                       },
                       {
-                        "name": "FindClose",
-                        "address": "0x406080"
+                        "address": "0x406080",
+                        "name": "FindClose"
                       },
                       {
-                        "name": "GetPriorityClass",
-                        "address": "0x406084"
+                        "address": "0x406084",
+                        "name": "GetPriorityClass"
                       },
                       {
-                        "name": "OpenProcess",
-                        "address": "0x406088"
+                        "address": "0x406088",
+                        "name": "OpenProcess"
                       },
                       {
-                        "name": "GetCurrentProcess",
-                        "address": "0x40608c"
+                        "address": "0x40608c",
+                        "name": "GetCurrentProcess"
                       },
                       {
-                        "name": "DuplicateHandle",
-                        "address": "0x406090"
+                        "address": "0x406090",
+                        "name": "DuplicateHandle"
                       },
                       {
-                        "name": "GetLastError",
-                        "address": "0x406094"
+                        "address": "0x406094",
+                        "name": "GetLastError"
                       },
                       {
-                        "name": "LocalFree",
-                        "address": "0x406098"
+                        "address": "0x406098",
+                        "name": "LocalFree"
                       },
                       {
-                        "name": "CreateToolhelp32Snapshot",
-                        "address": "0x40609c"
+                        "address": "0x40609c",
+                        "name": "CreateToolhelp32Snapshot"
                       },
                       {
-                        "name": "Process32First",
-                        "address": "0x4060a0"
+                        "address": "0x4060a0",
+                        "name": "Process32First"
                       },
                       {
-                        "name": "Process32Next",
-                        "address": "0x4060a4"
+                        "address": "0x4060a4",
+                        "name": "Process32Next"
                       },
                       {
-                        "name": "GetLogicalDriveStringsA",
-                        "address": "0x4060a8"
+                        "address": "0x4060a8",
+                        "name": "GetLogicalDriveStringsA"
                       },
                       {
-                        "name": "GetDriveTypeA",
-                        "address": "0x4060ac"
+                        "address": "0x4060ac",
+                        "name": "GetDriveTypeA"
                       },
                       {
-                        "name": "GetVolumeInformationA",
-                        "address": "0x4060b0"
+                        "address": "0x4060b0",
+                        "name": "GetVolumeInformationA"
                       },
                       {
-                        "name": "GetComputerNameA",
-                        "address": "0x4060b4"
+                        "address": "0x4060b4",
+                        "name": "GetComputerNameA"
                       },
                       {
-                        "name": "CreateFileA",
-                        "address": "0x4060b8"
+                        "address": "0x4060b8",
+                        "name": "CreateFileA"
                       },
                       {
-                        "name": "GetFileSize",
-                        "address": "0x4060bc"
+                        "address": "0x4060bc",
+                        "name": "GetFileSize"
                       },
                       {
-                        "name": "WriteFile",
-                        "address": "0x4060c0"
+                        "address": "0x4060c0",
+                        "name": "WriteFile"
                       },
                       {
-                        "name": "LoadLibraryA",
-                        "address": "0x4060c4"
+                        "address": "0x4060c4",
+                        "name": "LoadLibraryA"
                       },
                       {
-                        "name": "GetProcAddress",
-                        "address": "0x4060c8"
+                        "address": "0x4060c8",
+                        "name": "GetProcAddress"
                       },
                       {
-                        "name": "FreeLibrary",
-                        "address": "0x4060cc"
+                        "address": "0x4060cc",
+                        "name": "FreeLibrary"
                       },
                       {
-                        "name": "GetVersionExA",
-                        "address": "0x4060d0"
+                        "address": "0x4060d0",
+                        "name": "GetVersionExA"
                       },
                       {
-                        "name": "GetSystemDefaultLangID",
-                        "address": "0x4060d4"
+                        "address": "0x4060d4",
+                        "name": "GetSystemDefaultLangID"
                       },
                       {
-                        "name": "OpenMutexA",
-                        "address": "0x4060d8"
+                        "address": "0x4060d8",
+                        "name": "OpenMutexA"
                       },
                       {
-                        "name": "CreateMutexA",
-                        "address": "0x4060dc"
+                        "address": "0x4060dc",
+                        "name": "CreateMutexA"
                       },
                       {
-                        "name": "CloseHandle",
-                        "address": "0x4060e0"
+                        "address": "0x4060e0",
+                        "name": "CloseHandle"
                       },
                       {
-                        "name": "lstrcmpiA",
-                        "address": "0x4060e4"
+                        "address": "0x4060e4",
+                        "name": "lstrcmpiA"
                       },
                       {
-                        "name": "ExitProcess",
-                        "address": "0x4060e8"
+                        "address": "0x4060e8",
+                        "name": "ExitProcess"
                       },
                       {
-                        "name": "SetEvent",
-                        "address": "0x4060ec"
+                        "address": "0x4060ec",
+                        "name": "SetEvent"
                       },
                       {
-                        "name": "WaitForSingleObject",
-                        "address": "0x4060f0"
+                        "address": "0x4060f0",
+                        "name": "WaitForSingleObject"
                       },
                       {
-                        "name": "Sleep",
-                        "address": "0x4060f4"
+                        "address": "0x4060f4",
+                        "name": "Sleep"
                       },
                       {
-                        "name": "DeleteFileA",
-                        "address": "0x4060f8"
+                        "address": "0x4060f8",
+                        "name": "DeleteFileA"
                       },
                       {
-                        "name": "CopyFileA",
-                        "address": "0x4060fc"
+                        "address": "0x4060fc",
+                        "name": "CopyFileA"
                       },
                       {
-                        "name": "GetWindowsDirectoryA",
-                        "address": "0x406100"
+                        "address": "0x406100",
+                        "name": "GetWindowsDirectoryA"
                       },
                       {
-                        "name": "GetModuleFileNameA",
-                        "address": "0x406104"
+                        "address": "0x406104",
+                        "name": "GetModuleFileNameA"
                       },
                       {
-                        "name": "CreateDirectoryA",
-                        "address": "0x406108"
+                        "address": "0x406108",
+                        "name": "CreateDirectoryA"
                       },
                       {
-                        "name": "GetFileAttributesA",
-                        "address": "0x40610c"
+                        "address": "0x40610c",
+                        "name": "GetFileAttributesA"
                       },
                       {
-                        "name": "SetFileAttributesA",
-                        "address": "0x406110"
+                        "address": "0x406110",
+                        "name": "SetFileAttributesA"
                       },
                       {
-                        "name": "CreateEventA",
-                        "address": "0x406114"
+                        "address": "0x406114",
+                        "name": "CreateEventA"
                       },
                       {
-                        "name": "CreateThread",
-                        "address": "0x406118"
+                        "address": "0x406118",
+                        "name": "CreateThread"
                       }
                     ]
                   },
                   {
                     "ADVAPI32.dll": [
                       {
-                        "name": "RegCloseKey",
-                        "address": "0x406000"
+                        "address": "0x406000",
+                        "name": "RegCloseKey"
                       },
                       {
-                        "name": "RegSetValueExA",
-                        "address": "0x406004"
+                        "address": "0x406004",
+                        "name": "RegSetValueExA"
                       },
                       {
-                        "name": "RegQueryValueExA",
-                        "address": "0x406008"
+                        "address": "0x406008",
+                        "name": "RegQueryValueExA"
                       },
                       {
-                        "name": "RegCreateKeyExA",
-                        "address": "0x40600c"
+                        "address": "0x40600c",
+                        "name": "RegCreateKeyExA"
                       },
                       {
-                        "name": "RegDeleteValueA",
-                        "address": "0x406010"
+                        "address": "0x406010",
+                        "name": "RegDeleteValueA"
                       },
                       {
-                        "name": "RegOpenKeyExA",
-                        "address": "0x406014"
+                        "address": "0x406014",
+                        "name": "RegOpenKeyExA"
                       },
                       {
-                        "name": "SetSecurityInfo",
-                        "address": "0x406018"
+                        "address": "0x406018",
+                        "name": "SetSecurityInfo"
                       },
                       {
-                        "name": "SetEntriesInAclA",
-                        "address": "0x40601c"
+                        "address": "0x40601c",
+                        "name": "SetEntriesInAclA"
                       },
                       {
-                        "name": "AdjustTokenPrivileges",
-                        "address": "0x406020"
+                        "address": "0x406020",
+                        "name": "AdjustTokenPrivileges"
                       },
                       {
-                        "name": "LookupPrivilegeValueA",
-                        "address": "0x406024"
+                        "address": "0x406024",
+                        "name": "LookupPrivilegeValueA"
                       },
                       {
-                        "name": "GetTokenInformation",
-                        "address": "0x406028"
+                        "address": "0x406028",
+                        "name": "GetTokenInformation"
                       },
                       {
-                        "name": "OpenProcessToken",
-                        "address": "0x40602c"
+                        "address": "0x40602c",
+                        "name": "OpenProcessToken"
                       },
                       {
-                        "name": "GetUserNameA",
-                        "address": "0x406030"
+                        "address": "0x406030",
+                        "name": "GetUserNameA"
                       },
                       {
-                        "name": "LookupAccountSidA",
-                        "address": "0x406034"
+                        "address": "0x406034",
+                        "name": "LookupAccountSidA"
                       },
                       {
-                        "name": "RegEnumKeyExA",
-                        "address": "0x406038"
+                        "address": "0x406038",
+                        "name": "RegEnumKeyExA"
                       },
                       {
-                        "name": "RegEnumValueA",
-                        "address": "0x40603c"
+                        "address": "0x40603c",
+                        "name": "RegEnumValueA"
                       }
                     ]
                   },
                   {
                     "MPR.dll": [
                       {
-                        "name": "WNetCloseEnum",
-                        "address": "0x406120"
+                        "address": "0x406120",
+                        "name": "WNetCloseEnum"
                       },
                       {
-                        "name": "WNetOpenEnumA",
-                        "address": "0x406124"
+                        "address": "0x406124",
+                        "name": "WNetOpenEnumA"
                       },
                       {
-                        "name": "WNetEnumResourceA",
-                        "address": "0x406128"
+                        "address": "0x406128",
+                        "name": "WNetEnumResourceA"
                       }
                     ]
                   },
                   {
                     "MSVCRT.dll": [
                       {
-                        "name": "_except_handler3",
-                        "address": "0x406130"
+                        "address": "0x406130",
+                        "name": "_except_handler3"
                       },
                       {
-                        "name": "__set_app_type",
-                        "address": "0x406134"
+                        "address": "0x406134",
+                        "name": "__set_app_type"
                       },
                       {
-                        "name": "__p__fmode",
-                        "address": "0x406138"
+                        "address": "0x406138",
+                        "name": "__p__fmode"
                       },
                       {
-                        "name": "__p__commode",
-                        "address": "0x40613c"
+                        "address": "0x40613c",
+                        "name": "__p__commode"
                       },
                       {
-                        "name": "_adjust_fdiv",
-                        "address": "0x406140"
+                        "address": "0x406140",
+                        "name": "_adjust_fdiv"
                       },
                       {
-                        "name": "__setusermatherr",
-                        "address": "0x406144"
+                        "address": "0x406144",
+                        "name": "__setusermatherr"
                       },
                       {
-                        "name": "_initterm",
-                        "address": "0x406148"
+                        "address": "0x406148",
+                        "name": "_initterm"
                       },
                       {
-                        "name": "__getmainargs",
-                        "address": "0x40614c"
+                        "address": "0x40614c",
+                        "name": "__getmainargs"
                       },
                       {
-                        "name": "_acmdln",
-                        "address": "0x406150"
+                        "address": "0x406150",
+                        "name": "_acmdln"
                       },
                       {
-                        "name": "exit",
-                        "address": "0x406154"
+                        "address": "0x406154",
+                        "name": "exit"
                       },
                       {
-                        "name": "_XcptFilter",
-                        "address": "0x406158"
+                        "address": "0x406158",
+                        "name": "_XcptFilter"
                       },
                       {
-                        "name": "_exit",
-                        "address": "0x40615c"
+                        "address": "0x40615c",
+                        "name": "_exit"
                       },
                       {
-                        "name": "swprintf",
-                        "address": "0x406160"
+                        "address": "0x406160",
+                        "name": "swprintf"
                       },
                       {
-                        "name": "fwrite",
-                        "address": "0x406164"
+                        "address": "0x406164",
+                        "name": "fwrite"
                       },
                       {
-                        "name": "fopen",
-                        "address": "0x406168"
+                        "address": "0x406168",
+                        "name": "fopen"
                       },
                       {
-                        "name": "fseek",
-                        "address": "0x40616c"
+                        "address": "0x40616c",
+                        "name": "fseek"
                       },
                       {
-                        "name": "fread",
-                        "address": "0x406170"
+                        "address": "0x406170",
+                        "name": "fread"
                       },
                       {
-                        "name": "fclose",
-                        "address": "0x406174"
+                        "address": "0x406174",
+                        "name": "fclose"
                       },
                       {
-                        "name": "_strnicmp",
-                        "address": "0x406178"
+                        "address": "0x406178",
+                        "name": "_strnicmp"
                       },
                       {
-                        "name": "strcmp",
-                        "address": "0x40617c"
+                        "address": "0x40617c",
+                        "name": "strcmp"
                       },
                       {
-                        "name": "sprintf",
-                        "address": "0x406180"
+                        "address": "0x406180",
+                        "name": "sprintf"
                       },
                       {
-                        "name": "memcpy",
-                        "address": "0x406184"
+                        "address": "0x406184",
+                        "name": "memcpy"
                       },
                       {
-                        "name": "strstr",
-                        "address": "0x406188"
+                        "address": "0x406188",
+                        "name": "strstr"
                       },
                       {
-                        "name": "strchr",
-                        "address": "0x40618c"
+                        "address": "0x40618c",
+                        "name": "strchr"
                       },
                       {
-                        "name": "atoi",
-                        "address": "0x406190"
+                        "address": "0x406190",
+                        "name": "atoi"
                       },
                       {
-                        "name": "memset",
-                        "address": "0x406194"
+                        "address": "0x406194",
+                        "name": "memset"
                       },
                       {
-                        "name": "strlen",
-                        "address": "0x406198"
+                        "address": "0x406198",
+                        "name": "strlen"
                       },
                       {
-                        "name": "strrchr",
-                        "address": "0x40619c"
+                        "address": "0x40619c",
+                        "name": "strrchr"
                       },
                       {
-                        "name": "time",
-                        "address": "0x4061a0"
+                        "address": "0x4061a0",
+                        "name": "time"
                       },
                       {
-                        "name": "srand",
-                        "address": "0x4061a4"
+                        "address": "0x4061a4",
+                        "name": "srand"
                       },
                       {
-                        "name": "rand",
-                        "address": "0x4061a8"
+                        "address": "0x4061a8",
+                        "name": "rand"
                       },
                       {
-                        "name": "strcpy",
-                        "address": "0x4061ac"
+                        "address": "0x4061ac",
+                        "name": "strcpy"
                       },
                       {
-                        "name": "strcat",
-                        "address": "0x4061b0"
+                        "address": "0x4061b0",
+                        "name": "strcat"
                       },
                       {
-                        "name": "malloc",
-                        "address": "0x4061b4"
+                        "address": "0x4061b4",
+                        "name": "malloc"
                       },
                       {
-                        "name": "_EH_prolog",
-                        "address": "0x4061b8"
+                        "address": "0x4061b8",
+                        "name": "_EH_prolog"
                       },
                       {
-                        "name": "__CxxFrameHandler",
-                        "address": "0x4061bc"
+                        "address": "0x4061bc",
+                        "name": "__CxxFrameHandler"
                       },
                       {
-                        "name": "rename",
-                        "address": "0x4061c0"
+                        "address": "0x4061c0",
+                        "name": "rename"
                       },
                       {
-                        "name": "_controlfp",
-                        "address": "0x4061c4"
+                        "address": "0x4061c4",
+                        "name": "_controlfp"
                       },
                       {
-                        "name": "free",
-                        "address": "0x4061c8"
+                        "address": "0x4061c8",
+                        "name": "free"
                       },
                       {
-                        "name": "_itoa",
-                        "address": "0x4061cc"
+                        "address": "0x4061cc",
+                        "name": "_itoa"
                       }
                     ]
                   },
                   {
                     "SHLWAPI.dll": [
                       {
-                        "name": "SHDeleteKeyA",
-                        "address": "0x4061d4"
+                        "address": "0x4061d4",
+                        "name": "SHDeleteKeyA"
                       }
                     ]
                   },
                   {
                     "WS2_32.dll": [
                       {
-                        "name": "gethostname",
-                        "address": "0x4061dc"
+                        "address": "0x4061dc",
+                        "name": "gethostname"
                       },
                       {
-                        "name": "gethostbyname",
-                        "address": "0x4061e0"
+                        "address": "0x4061e0",
+                        "name": "gethostbyname"
                       },
                       {
-                        "name": "WSAGetLastError",
-                        "address": "0x4061e4"
+                        "address": "0x4061e4",
+                        "name": "WSAGetLastError"
                       },
                       {
-                        "name": "inet_ntoa",
-                        "address": "0x4061e8"
+                        "address": "0x4061e8",
+                        "name": "inet_ntoa"
                       },
                       {
-                        "name": "inet_addr",
-                        "address": "0x4061ec"
+                        "address": "0x4061ec",
+                        "name": "inet_addr"
                       },
                       {
-                        "name": "socket",
-                        "address": "0x4061f0"
+                        "address": "0x4061f0",
+                        "name": "socket"
                       },
                       {
-                        "name": "htons",
-                        "address": "0x4061f4"
+                        "address": "0x4061f4",
+                        "name": "htons"
                       },
                       {
-                        "name": "connect",
-                        "address": "0x4061f8"
+                        "address": "0x4061f8",
+                        "name": "connect"
                       },
                       {
-                        "name": "select",
-                        "address": "0x4061fc"
+                        "address": "0x4061fc",
+                        "name": "select"
                       },
                       {
-                        "name": "send",
-                        "address": "0x406200"
+                        "address": "0x406200",
+                        "name": "send"
                       },
                       {
-                        "name": "closesocket",
-                        "address": "0x406204"
+                        "address": "0x406204",
+                        "name": "closesocket"
                       },
                       {
-                        "name": "recv",
-                        "address": "0x406208"
+                        "address": "0x406208",
+                        "name": "recv"
                       },
                       {
-                        "name": "WSAStartup",
-                        "address": "0x40620c"
+                        "address": "0x40620c",
+                        "name": "WSAStartup"
                       },
                       {
-                        "name": "WSACleanup",
-                        "address": "0x406210"
+                        "address": "0x406210",
+                        "name": "WSACleanup"
                       },
                       {
-                        "name": "ioctlsocket",
-                        "address": "0x406214"
+                        "address": "0x406214",
+                        "name": "ioctlsocket"
                       }
                     ]
                   }
@@ -600,13 +600,13 @@
                 "data_directories": [
                   {
                     "virtual_address": "0x6288",
-                    "name": "IMPORT",
-                    "size": 140
+                    "size": 140,
+                    "name": "IMPORT"
                   },
                   {
                     "virtual_address": "0x9000",
-                    "name": "RESOURCE",
-                    "size": 5584
+                    "size": 5584,
+                    "name": "RESOURCE"
                   }
                 ],
                 "signature": {
@@ -614,127 +614,127 @@
                 },
                 "rich_header_info": [
                   {
+                    "times used": 1,
                     "tool_id": 12,
-                    "version": 7291,
-                    "times used": 1
+                    "version": 7291
                   },
                   {
+                    "times used": 2,
                     "tool_id": 14,
-                    "version": 7299,
-                    "times used": 2
+                    "version": 7299
                   },
                   {
+                    "times used": 11,
                     "tool_id": 10,
-                    "version": 8168,
-                    "times used": 11
+                    "version": 8168
                   },
                   {
+                    "times used": 2,
                     "tool_id": 4,
-                    "version": 8168,
-                    "times used": 2
+                    "version": 8168
                   },
                   {
+                    "times used": 3,
                     "tool_id": 0,
-                    "version": 0,
-                    "times used": 3
+                    "version": 0
                   },
                   {
+                    "times used": 151,
                     "tool_id": 1,
-                    "version": 0,
-                    "times used": 151
+                    "version": 0
                   },
                   {
+                    "times used": 9,
                     "tool_id": 19,
-                    "version": 8034,
-                    "times used": 9
+                    "version": 8034
                   },
                   {
+                    "times used": 2,
                     "tool_id": 11,
-                    "version": 8168,
-                    "times used": 2
+                    "version": 8168
                   },
                   {
+                    "times used": 1,
                     "tool_id": 6,
-                    "version": 1720,
-                    "times used": 1
+                    "version": 1720
                   }
                 ],
                 "sections": [
                   {
                     "raw_data_size": 20480,
-                    "name": ".text",
-                    "rva": "0x1000",
                     "pointer_to_raw_data": 4096,
                     "entropy": 5.988944574755928,
+                    "name": ".text",
+                    "rva": "0x1000",
                     "virtual_size": "0x4bfe",
                     "md5": "9062ff3acdff9ac80cd9f97a0df42383"
                   },
                   {
                     "raw_data_size": 4096,
-                    "name": ".rdata",
-                    "rva": "0x6000",
                     "pointer_to_raw_data": 24576,
                     "entropy": 3.291179369026711,
+                    "name": ".rdata",
+                    "rva": "0x6000",
                     "virtual_size": "0xc44",
                     "md5": "28c9e7872eb9d0a20a1d953382722735"
                   },
                   {
                     "raw_data_size": 4096,
-                    "name": ".data",
-                    "rva": "0x7000",
                     "pointer_to_raw_data": 28672,
                     "entropy": 4.04448531075933,
+                    "name": ".data",
+                    "rva": "0x7000",
                     "virtual_size": "0x17b0",
                     "md5": "c38a0453ad319c9cd8b1760baf57a528"
                   },
                   {
                     "raw_data_size": 8192,
-                    "name": ".rsrc",
-                    "rva": "0x9000",
                     "pointer_to_raw_data": 32768,
                     "entropy": 4.49716326553469,
+                    "name": ".rsrc",
+                    "rva": "0x9000",
                     "virtual_size": "0x15d0",
                     "md5": "0d4522a26417d45c33759d2a6375a55f"
                   }
                 ],
                 "resources": [
                   {
-                    "sublanguage": "SUBLANG_CHINESE_SIMPLIFIED",
                     "entropy": 6.520155287685024,
                     "offset": "0x90f0",
-                    "id": 1,
                     "size": "0x10a8",
-                    "language_desc": "Chinese-People's Republic of China",
-                    "name": "RT_ICON",
-                    "language": "LANG_CHINESE",
                     "sha256": "52a955550acda3b566c9fa9eda164853df4135dfa5eb7b173b3c5453a12f85a3",
+                    "name": "RT_ICON",
+                    "sublanguage": "SUBLANG_CHINESE_SIMPLIFIED",
+                    "language": "LANG_CHINESE",
+                    "id": 1,
                     "type": "data",
+                    "language_desc": "Chinese-People's Republic of China",
                     "md5": "14bf7c82dcfb7e41243f5b87d0c79538"
                   },
                   {
-                    "sublanguage": "SUBLANG_CHINESE_SIMPLIFIED",
                     "entropy": 1.7814963295286754,
                     "offset": "0xa198",
-                    "id": 2,
                     "size": "0x14",
-                    "language_desc": "Chinese-People's Republic of China",
-                    "name": "RT_GROUP_ICON",
-                    "language": "LANG_CHINESE",
                     "sha256": "a14e70ed824f3f17d3a51136aa08839954d6d3ccadaa067415c7bfc08e6636b0",
+                    "name": "RT_GROUP_ICON",
+                    "sublanguage": "SUBLANG_CHINESE_SIMPLIFIED",
+                    "language": "LANG_CHINESE",
+                    "id": 2,
                     "type": "data",
+                    "language_desc": "Chinese-People's Republic of China",
                     "md5": "3c68f77c35c26ff079a1c410ee44fa62"
                   },
                   {
-                    "sublanguage": "SUBLANG_CHINESE_SIMPLIFIED",
                     "entropy": 3.474061257811601,
                     "offset": "0xa1b0",
-                    "id": 3,
                     "size": "0x41c",
-                    "language_desc": "Chinese-People's Republic of China",
-                    "name": "RT_VERSION",
-                    "language": "LANG_CHINESE",
                     "sha256": "934b13844893dc0438a47aadc20d4873f806000c761249795c7f265ccca48bc9",
+                    "name": "RT_VERSION",
+                    "sublanguage": "SUBLANG_CHINESE_SIMPLIFIED",
+                    "language": "LANG_CHINESE",
+                    "id": 3,
                     "type": "data",
+                    "language_desc": "Chinese-People's Republic of China",
                     "md5": "9a12ece86a71c3499df0fb0ebe6ea33e"
                   }
                 ]
