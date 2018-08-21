@@ -65,7 +65,7 @@ target/
 .circleci/build_num
 .idea
 venv
-test/web
-test/dump
-test/malware
-test/not.malware
+tests/web
+tests/dump
+tests/malware
+tests/not.malware
