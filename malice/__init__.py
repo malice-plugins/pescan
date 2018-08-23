@@ -40,16 +40,19 @@ class MalPEFile(object):
         self.sha256 = sha256_checksum(self.file)
         self.data = open(file_path, 'rb').read()
         self.peid_db = peid_db_path
-        self.dump = dump_path
+        self.dump = None
         self.pe = None
         self.results = {}
         self.result_compile_time = None
         self.result_sections = None
         if not path.exists(self.file):
             raise Exception("file does not exist: {}".format(self.file))
-        if should_dump and not path.isdir(dump_path):
-            log.error("folder does not exist: {}".format(dump_path))
-            self.dump = None
+        if should_dump:
+            if path.isdir(dump_path):
+                self.dump = dump_path
+            else:
+                log.error("folder does not exist: {}".format(dump_path))
+                self.dump = None
 
     def info(self):
         info = {}
