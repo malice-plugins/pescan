@@ -70,5 +70,5 @@ def get_sha256(data):
 
 def json2markdown(json_data):
     """Convert JSON output to MarkDown table"""
-    with open('utils/markdown.jinja2') as f:
+    with open(path.join(ROOT, 'utils/markdown.jinja2')) as f:
         return Template(f.read()).render(exe=json_data)
