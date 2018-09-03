@@ -83,8 +83,8 @@ def exe():
 @click.option(
     'eshost',
     '--elasticsearch',
-    default=lambda: os.environ.get('MALICE_ELASTICSEARCH', ''),
-    help='elasticsearch address for Malice to store results [$MALICE_ELASTICSEARCH]',
+    default=lambda: os.environ.get('MALICE_ELASTICSEARCH_URL', ''),
+    help='elasticsearch address for Malice to store results [$MALICE_ELASTICSEARCH_URL]',
     metavar='HOST')
 @click.option(
     '--timeout',

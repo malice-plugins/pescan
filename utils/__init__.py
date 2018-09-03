@@ -8,7 +8,7 @@ from collections import Counter
 from os import path
 
 import magic
-from jinja2 import BaseLoader, Environment
+from jinja2 import Template
 
 from constants import ROOT
 
@@ -70,6 +70,5 @@ def get_sha256(data):
 
 def json2markdown(json_data):
     """Convert JSON output to MarkDown table"""
-
-    with open(path.join(ROOT, 'utils/markdown.jinja'), 'r') as mj:
-        return Environment(loader=BaseLoader()).from_string(mj.read()).render(exe=json_data)
+    with open('utils/markdown.jinja2') as f:
+        return Template(f.read()).render(exe=json_data)

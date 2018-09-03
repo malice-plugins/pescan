@@ -3,6 +3,7 @@ ORG=malice
 NAME=pescan
 CATEGORY=exe
 VERSION=$(shell cat VERSION)
+
 MALWARE?=tests/malware
 EXTRACT?=/malware/tests/dump
 MALICE_SCANID?=
@@ -11,7 +12,7 @@ all: build size tag test_all
 
 .PHONY: build
 build:
-	cd $(VERSION); docker build -t $(ORG)/$(NAME):$(VERSION) .
+	docker build -t $(ORG)/$(NAME):$(VERSION) .
 
 .PHONY: size
 size:
@@ -36,12 +37,11 @@ tar:
 .PHONY: start_elasticsearch
 start_elasticsearch:
 ifeq ("$(shell docker inspect -f {{.State.Running}} elasticsearch)", "true")
-	@echo "===> elasticsearch already running"
-else
-	@echo "===> Starting elasticsearch"
+	@echo "===> elasticsearch already running.  Stopping now..."
 	@docker rm -f elasticsearch || true
-	@docker run --init -d --name elasticsearch -p 9200:9200 malice/elasticsearch:6.3; sleep 10
 endif
+	@echo "===> Starting elasticsearch"
+	@docker run --init -d --name elasticsearch -p 9200:9200 malice/elasticsearch:6.4; sleep 15
 
 .PHONY: malware
 malware:
@@ -64,21 +64,26 @@ test: malware
 .PHONY: test_elastic
 test_elastic: start_elasticsearch malware
 	@echo "===> ${NAME} test_elastic found"
-	docker run --rm --link elasticsearch -e MALICE_ELASTICSEARCH=elasticsearch -v $(PWD):/malware $(ORG)/$(NAME):$(VERSION) scan -vvvv -d --output $(EXTRACT) $(MALWARE)
+	docker run --rm --link elasticsearch -e MALICE_ELASTICSEARCH_URL=elasticsearch -v $(PWD):/malware $(ORG)/$(NAME):$(VERSION) scan -vvvv -d --output $(EXTRACT) $(MALWARE)
 	# @echo "===> ${NAME} test_elastic NOT found"
-	# docker run --rm --link elasticsearch -e MALICE_ELASTICSEARCH=elasticsearch $(ORG)/$(NAME):$(VERSION) -V --api ${MALICE_VT_API} lookup $(MISSING_HASH)
+	# docker run --rm --link elasticsearch -e MALICE_ELASTICSEARCH_URL=elasticsearch $(ORG)/$(NAME):$(VERSION) -V --api ${MALICE_VT_API} lookup $(MISSING_HASH)
 	http localhost:9200/malice/_search | jq . > docs/elastic.json
+
+.PHONY: test_extern_elastic
+test_extern_elastic: malware
+	@echo "===> ${NAME} test_extern_elastic found"
+	docker run --rm \
+	-e MALICE_ELASTICSEARCH_URL=${MALICE_ELASTICSEARCH_URL} \
+	-e MALICE_ELASTICSEARCH_USERNAME=${MALICE_ELASTICSEARCH_USERNAME} \
+	-e MALICE_ELASTICSEARCH_PASSWORD=${MALICE_ELASTICSEARCH_PASSWORD} \
+	-e MALICE_ELASTICSEARCH_INDEX="test" \
+	-v $(PWD):/malware $(ORG)/$(NAME):$(VERSION) scan -vvvv -d --output $(EXTRACT) $(MALWARE)
 
 .PHONY: test_markdown
 test_markdown: test_elastic
 	@echo "===> ${NAME} test_markdown"
 	# http localhost:9200/malice/_search query:=@docs/query.json | jq . > docs/elastic.json
 	cat docs/elastic.json | jq -r '.hits.hits[] ._source.plugins.${CATEGORY}.${NAME}.markdown' > docs/SAMPLE.md
-
-.PHONY: test_malice
-test_malice:
-	@echo "===> $(ORG)/$(NAME):$(VERSION) testing with running malice elasticsearch DB (update existing sample)"
-	@docker run --rm -e MALICE_SCANID=$(MALICE_SCANID) -e MALICE_ELASTICSEARCH=elasticsearch --link malice-elastic:elasticsearch -v $(PWD):/malware $(ORG)/$(NAME):$(VERSION) scan -t -vvvv $(MALWARE)
 
 .PHONY: test_web
 test_web: malware stop
@@ -88,6 +93,11 @@ test_web: malware stop
 	@echo "===> Stopping web service"
 	@docker logs $(NAME)-web
 	@docker rm -f $(NAME)-web
+
+.PHONY: test_malice
+test_malice:
+	@echo "===> $(ORG)/$(NAME):$(VERSION) testing with running malice elasticsearch DB (update existing sample)"
+	@docker run --rm -e MALICE_SCANID=$(MALICE_SCANID) -e MALICE_ELASTICSEARCH_URL=elasticsearch --link malice-elastic:elasticsearch -v $(PWD):/malware $(ORG)/$(NAME):$(VERSION) scan -t -vvvv $(MALWARE)
 
 .PHONY: run
 run: stop ## Run docker container
@@ -113,7 +123,7 @@ ci-size: ci-build
 clean: clean_pyc ## Clean docker image and stop all running containers
 	docker-clean stop
 	docker rmi $(ORG)/$(NAME):$(VERSION) || true
-	docker rmi $(ORG)/$(NAME):dev || true
+	docker rmi $(ORG)/$(NAME):latest || true
 	rm $(MALWARE) || true
 	rm README.md.bu || true
 

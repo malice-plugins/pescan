@@ -6,6 +6,7 @@
 docs*
 vendor*
 tests*
+tests/dump*
 .circleci*
 docs*
 
