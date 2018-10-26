@@ -167,7 +167,7 @@ class MalPEFile(object):
 
         def get_signatures():
 
-            with open(self.peid_db, 'rt', encoding='ISO-8859-1') as f:
+            with open(self.peid_db, 'r', encoding='UTF-8') as f:
                 sig_data = f.read()
 
             return peutils.SignatureDatabase(data=sig_data)
