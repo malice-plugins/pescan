@@ -5,7 +5,7 @@ elasticsearch>=6.0.0,<7.0.0
 Jinja2==2.10
 Flask==1.0.2
 Werkzeug==0.14.1
-requests==2.19.1
+requests>=2.20.0
 
 cffi
 pyasn1==0.4.4
