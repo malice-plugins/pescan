@@ -49,6 +49,10 @@ def get_signify(file_path, log=None):
             signature['error'] = e.message
             log.exception(e)
 
+    except Exception as e:
+        signature['error'] = e.message
+        log.exception(e)
+
     # Now try to get certificate and signature data
     sig_datas = []
     try:
