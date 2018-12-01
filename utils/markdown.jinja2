@@ -4,10 +4,12 @@
 {% if exe.get('info') -%}
 #### Header
 
- - **Target Machine:** `{{ exe['info'].get('machine_type') }}`
- - **Compilation Timestamp:** `{{ exe['info']['compiletime'].get('datetime') }}`
- - **Entry Point:** `{{ exe['info'].get('entrypoint') }}`
- - **Contained Sections:** `{{ exe['info'].get('number_of_sections') }}`
+- **Target Machine:** `{{ exe['info'].get('machine_type') }}`
+{% if exe['info'].get('compiletime') -%}
+- **Compilation Timestamp:** `{{ exe['info']['compiletime'].get('datetime') }}`
+{% endif -%}
+- **Entry Point:** `{{ exe['info'].get('entrypoint') }}`
+- **Contained Sections:** `{{ exe['info'].get('number_of_sections') }}`
 {% endif %}
 {% if exe.get('sections') -%}
 #### Sections

@@ -17,15 +17,16 @@ from io import BytesIO
 from os import path
 
 import chardet
-from future.builtins import open
 
 import pefile
 import peutils
-from lcid import LCID
+from future.builtins import open
 from pehash.pehasher import calculate_pehash
 from sig import get_signify
 from utils import get_entropy, get_md5, get_sha256, get_type, sha256_checksum
 from utils.charset import safe_str, translate_str
+
+from .lcid import LCID
 
 # from verifysigs.asn1utils import dn
 # from verifysigs.sigs_helper import get_auth_data
@@ -100,7 +101,7 @@ class MalPEFile(object):
 
             # When it is a unicode, we know we are coming from RSDS which is UTF-8
             # otherwise, we come from NB10 and we need to guess the charset.
-            if type(self.pe.pdb_filename) != unicode:
+            if not isinstance(self.pe.pdb_filename, unicode):
                 char_enc_guessed = translate_str(self.pe.pdb_filename)
                 pdb_filename = char_enc_guessed['converted']
             else:
@@ -492,7 +493,7 @@ class MalPEFile(object):
                             success = False
                             try:
                                 comment = "%s (id:%s - lang_id:0x%04X [%s])" % (str(dir_type.name), str(nameID.name),
-                                                                                language.id, lcid[language.id])
+                                                                                language.id, LCID[language.id])
                             except KeyError:
                                 comment = "%s (id:%s - lang_id:0x%04X [Unknown language])" % (str(
                                     dir_type.name), str(nameID.name), language.id)
@@ -709,7 +710,7 @@ class MalPEFile(object):
 
             # VB check
             if check_module(iat, 'VB'):
-                self.log('info', "{0} - Possible language: Visual Basic".format(sample.name))
+                log('info', "{0} - Possible language: Visual Basic".format(sample.name))
                 return 'Visual Basic'
 
             # .NET check

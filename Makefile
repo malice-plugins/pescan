@@ -3,6 +3,7 @@ ORG=malice
 NAME=pescan
 CATEGORY=exe
 VERSION=$(shell cat VERSION)
+FLAGS?=
 
 MALWARE?=tests/malware
 EXTRACT?=/malware/tests/dump
@@ -12,7 +13,7 @@ all: build size tag test_all
 
 .PHONY: build
 build:
-	docker build -t $(ORG)/$(NAME):$(VERSION) .
+	docker build $(FLAGS) -t $(ORG)/$(NAME):$(VERSION) .
 
 .PHONY: size
 size:
