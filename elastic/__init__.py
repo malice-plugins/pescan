@@ -50,7 +50,11 @@ class Elastic(object):
                 }
             }
             resp = self.es.update(
-                index=self.index, doc_type=self.doc_type, id=results['id'], body=dict(doc=update_scan))
+                index=self.index,
+                doc_type=self.doc_type,
+                id=results['id'],
+                refresh="wait_for",
+                body=dict(doc=update_scan))
             if not resp.get("result"):
                 raise elasticsearch.ElasticsearchException("[UPDATE] failed to update doc with id: {}".format(
                     results['id']))

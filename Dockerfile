@@ -8,7 +8,7 @@ LABEL malice.plugin.mime="application/x-dosexec"
 LABEL malice.plugin.docker.engine="*"
 
 COPY . /usr/sbin
-RUN apk --update add --no-cache python py-setuptools file
+RUN apk --update add --no-cache python py-setuptools py-magic
 RUN apk --update add --no-cache -t .build-deps \
   openssl-dev \
   build-base \

@@ -24,5 +24,5 @@ git+https://github.com/dlitz/pycrypto.git@v2.7a1#egg=pycrypto
 git+https://github.com/erocarrera/pefile.git@v2018.8.8#egg=pefile
 git+https://github.com/jdval/signify.git#egg=signify
 git+https://github.com/sebdraven/verify-sigs.git
-git+https://github.com/smarnach/pyexiftool.git
-git+https://github.com/ahupp/python-magic.git
+# git+https://github.com/smarnach/pyexiftool.git
+# git+https://github.com/ahupp/python-magic.git
