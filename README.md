@@ -2,7 +2,7 @@
 
 # pescan
 
-[![Circle CI](https://circleci.com/gh/malice-plugins/pescan.png?style=shield)](https://circleci.com/gh/malice-plugins/pescan) [![License](http://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org) [![Docker Stars](https://img.shields.io/docker/stars/malice/pescan.svg)](https://hub.docker.com/r/malice/pescan/) [![Docker Pulls](https://img.shields.io/docker/pulls/malice/pescan.svg)](https://hub.docker.com/r/malice/pescan/) [![Docker Image](https://img.shields.io/badge/docker%20image-81.6MB-blue.svg)](https://hub.docker.com/r/malice/pescan/)
+[![Circle CI](https://circleci.com/gh/malice-plugins/pescan.png?style=shield)](https://circleci.com/gh/malice-plugins/pescan) [![License](http://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org) [![Docker Stars](https://img.shields.io/docker/stars/malice/pescan.svg)](https://hub.docker.com/r/malice/pescan/) [![Docker Pulls](https://img.shields.io/docker/pulls/malice/pescan.svg)](https://hub.docker.com/r/malice/pescan/) [![Docker Image](https://img.shields.io/badge/docker%20image-81.7MB-blue.svg)](https://hub.docker.com/r/malice/pescan/)
 
 Malice PExecutable Plugin
 

@@ -499,7 +499,7 @@ class MalPEFile(object):
                             except KeyError:
                                 comment = "%s (id:%s - lang_id:0x%04X [Unknown language])" % (str(
                                     dir_type.name), str(nameID.name), language.id)
-                            print("PE: STRINGS - %s" % comment)
+                            log.debug("PE: STRINGS - %s" % comment)
                             for idx in range(len(strings)):
                                 # noinspection PyBroadException
                                 try:
@@ -511,13 +511,11 @@ class MalPEFile(object):
 
                                     tag_value = tag_value.replace('\r', ' ').replace('\n', ' ')
                                     if strings[idx][0] is not None:
-                                        print("{}: FILE_STRING".format(strings[idx][0]))
                                         tags.append(strings[idx][0])
                                         # res.add_line(
                                         #     [strings[idx][0], ": ",
                                         #      res_txt_tag(tag_value, TAG_TYPE['FILE_STRING'])])
                                     else:
-                                        print("{}: FILE_STRING".format(tag_value))
                                         tags.append(tag_value)
                                         # res.add_line(res_txt_tag(tag_value, TAG_TYPE['FILE_STRING']))
 
@@ -525,7 +523,6 @@ class MalPEFile(object):
                                 except:
                                     pass
                             if success:
-                                print("SUCCESS")
                                 self.results['resource_strings'] = tags
 
     def slack_space(self):
