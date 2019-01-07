@@ -15,7 +15,7 @@ import tempfile
 import time
 from io import BytesIO
 from os import path
-
+from collections import Iterable
 import chardet
 
 import pefile
@@ -280,6 +280,8 @@ class MalPEFile(object):
         if hasattr(self.pe, 'FileInfo'):
             pe_resource_verinfo_res_list = []
             for file_info in self.pe.FileInfo:
+                if not isinstance(file_info, Iterable):
+                    file_info = [file_info]
                 for info in file_info:
                     pe_resource_verinfo_res = {}
                     if info.name == "StringFileInfo":

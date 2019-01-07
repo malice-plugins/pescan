@@ -119,7 +119,11 @@ def scan(file_path, verbose, table, proxy, callback, eshost, timeout, dump, outp
             'category': 'exe',
             'results': pe_results
         }
-        malice_scan['results']['markdown'] = json2markdown(pe_results)
+        try:
+            malice_scan['results']['markdown'] = json2markdown(pe_results)
+        except Exception as e:
+            log.exception("failed to render jinja template")
+            malice_scan['results']['markdown'] = e.message
 
         # write to elasticsearch
         if eshost:
