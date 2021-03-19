@@ -17,7 +17,7 @@ pefile = {ref = "v2017.11.5", git = "https://github.com/erocarrera/pefile.git"}
 cryptography = {git = "https://github.com/pyca/cryptography.git"}
 signify = {git = "https://github.com/jdval/signify.git"}
 bitstring = "*"
-"Jinja2" = "==2.10"
+"Jinja2" = "==2.11.3"
 Flask = "==1.0.2"
 Werkzeug = "==0.14.1"
 
